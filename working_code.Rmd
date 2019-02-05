@@ -1,6 +1,6 @@
 ---
-title: "Untitled"
-author: "Hannah Hardenbergh"
+title: "Replication 1"
+author: "Hannah Hardenbergh and Helen Simpson"
 date: "2/4/2019"
 output: html_document
 ---
@@ -15,6 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(devtools)
 library(gt)
 library(tidyverse)
+library(stargazer)
+library(knitr)
+library(kableExtra)
 
 # Load data. rename dataframes for ease of mind.
 
@@ -22,6 +25,24 @@ data_case <- read_csv("glynn_sen_daughters_by_case_1.csv")
 data_judge <- read_csv("glynn_sen_daughters_by_judge.csv")
 
 read_csv("glynn_sen_daughters_replication_code.R")
+
+```
+
+```{r Table 1}
+
+table_1 <- data_judge %>% 
+  select(child,
+         girls,
+         republican) %>%
+  group_by(republican) %>% 
+  summarize(total = n()) %>% 
+  count(republican)
+
+table_1 %>% 
+  kable(caption = "Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002",
+      digits = 1) %>% 
+  group_rows("Number of Children", 1, 2) %>%
+  group_rows("Number of Girls", 3, 4)
 
 ```
 
