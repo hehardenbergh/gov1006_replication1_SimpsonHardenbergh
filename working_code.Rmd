@@ -26,23 +26,53 @@ data_judge <- read_csv("glynn_sen_daughters_by_judge.csv")
 
 read_csv("glynn_sen_daughters_replication_code.R")
 
+
 ```
 
 ```{r Table 1}
+# subset the judges data frame to exclude judges without daughters
 
-table_1 <- data_judge %>% 
-  select(child,
-         girls,
-         republican) %>%
-  group_by(republican) %>% 
-  summarize(total = n()) %>% 
-  count(republican)
+judges <- subset(data_judge, girls != "NaN")
 
-table_1 %>% 
-  kable(caption = "Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002",
-      digits = 1) %>% 
-  group_rows("Number of Children", 1, 2) %>%
-  group_rows("Number of Girls", 3, 4)
+# create a table for how many children democratic and republican judges have 
+
+row1 <- table(judges$republican, judges$child)
+
+# create a table for how many daughters democratic and republican judges have
+
+row2 <- table(judges$republican, judges$girls)
+
+# print tables
+
+row1
+
+row2
+
+# add row names and styling
+
+kable(row1, 
+      caption = "Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002")
 
 ```
+
+
+```{r Table 2}
+table_2 <- data_judge %>% 
+  select(republican,
+         girls,
+         child) %>% 
+  summarise(mean_girls = mean(girls),
+            mean_child = mean(child)) %>%
+  mutate(no_child = ifelse)
+  
+table_2 %>% 
+  lm()
+
+```
+
+```{r}
+
+```
+
+
 
