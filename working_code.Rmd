@@ -5,15 +5,12 @@ date: "2/4/2019"
 output: html_document
 ---
 
-#Data Introduction
+# Data Introduction
+
 This paper uses two datasets: data on 244 individual judges and 4,377 cases. The dataset on judges contains identification and demographic information (the judge’s name, circuit number, gender, age, year of birth, race, religion, and the party of the appointing president), information on the judge's children (the total number of children, the number of daughters, the number of sons), and the proportion of gender-related cases in which the judge votes progressively. The dataset on cases includes information on the cases themselves, the area of law they are in, the judges who decided them, and whether or not a progressive vote occurred.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r }
-
 
 # loading necessary packages
 
@@ -82,7 +79,8 @@ all <- subset(judge.means,
               girls != "NaN") 
 ```
 
-```{r Table 1 Number of kids and daughters}
+```{r, results= "asis"}
+## Table 1 Number of kids and daughters
 
 # create objects for number of children and number of girls per judge, per
 # political party
@@ -97,7 +95,8 @@ xtable(aa)
 xtable(bb)
 ```
 
-```{r Table 2 Judge Demographics}
+```{r, results="asis"}
+## Table 2 Judge Demographics
 
 # Make objects for each subset of data, to create mean values of variables next.
 # Make objects to designate judges' political parties and for their genders.
@@ -304,7 +303,8 @@ xtable(demographic_table,
        align = "l|ccccc")
 ```
 
-```{r Calculating the Weights (Number of Cases)}
+```{r, results="asis"}
+## Calculating the Weights (Number of Cases)
 
 no_cases <- matrix(data = NA,
                    nrow = nrow(judge.means),
@@ -361,7 +361,9 @@ dem.means <- subset(judge.means,
                     republican == 0)
 ```
 
-```{r Figure 1}
+```{r, results="asis"}
+
+## Figure 1
 
 #pdf(file= "lib_votes.pdf", width = 5, height = 5, family = "Helvetica", pointsize = 10)
 
@@ -417,7 +419,8 @@ text(x = .075,
 #dev.off()
 ```
 
-```{r Table 3: Distribution of Cases}
+```{r, results="asis"}
+## Table 3: Distribution of Cases
 
 gg <- rbind (summary(judge.means$no_cases),
              summary(dem.means$no_cases), 
@@ -431,7 +434,8 @@ xtable(gg,
 ```
 
 
-```{r Table 4: Core Results (WLS)}
+```{r, results="asis"}
+## Table 4: Core Results (WLS)
 
 # In this code chunk we are going to run the regression models for all the
 # judges, weighted by the number of cases they have had. It is useful to take a
@@ -521,7 +525,8 @@ table_4 <- stargazer(my.out1,
                                "Constant"))
 ```
 
-```{r Table 5: Core Results (Case-Level)}
+```{r, results = "asis"}
+## Table 5: Core Results (Case-Level)
 
 my.out7 <- zelig(progressive.vote ~ as.factor(girls) + as.factor(child), 
 		model = "logit", 
@@ -674,7 +679,8 @@ stargazer(my.out7,
           digits = 2)
 ```
 
-```{r Table 6: Comparison for Non-Gender Related Cases}
+```{r, results = "asis"}
+## Table 6: Comparison for Non-Gender Related Cases
 
 # the following was commented out: 
     # cases <- read.csv("cases.for.analysis.csv")
