@@ -95,6 +95,7 @@ xtable(bb)
 ```{Table 2 Judge Demographics}
 
 # Make objects for each subset of data, to create mean values of variables next.
+# Make objects to designate judges' political parties and for their genders.
 
 dems <- subset(all, 
                republican == 0)
@@ -105,6 +106,7 @@ women <- subset(all,
 men <- subset(all, 
               woman == 0)
 
+# call mean for number of kids, excluding NAs with na.omit().
 
 mean.kids <-  cbind(mean(na.omit(all$child)), 
 		mean(na.omit(dems$child)),
@@ -113,12 +115,18 @@ mean.kids <-  cbind(mean(na.omit(all$child)),
 		mean(na.omit(men$child))
 	)
 
+# mean number of girls, same with the na.omit() function.
+
 mean.girls <- cbind(mean(na.omit(all$girls)), 
 		mean(na.omit(dems$girls)),
 		mean(na.omit(reps$girls)),
 		mean(na.omit(women$girls)),
 		mean(na.omit(men$girls))
 	)
+
+# count proportion of judges who have 0 kids. Omit rows with missing values
+# using na.omit() for each judge variable: their # kids, # daughters, their
+# political party and their gender.
 
 prop.zero <- cbind(prop.table(table(na.omit(all$child)))[1],
 prop.table(table(na.omit(dems$child)))[1],
@@ -127,20 +135,27 @@ prop.table(table(na.omit(women$child)))[1],
 prop.table(table(na.omit(men$child)))[1]
 	)
 	
-	
+# count proportion of judges who have 1 kid. Omit rows with missing values
+# using na.omit()
+
 prop.one <- cbind(prop.table(table(na.omit(all$child)))[2],
 prop.table(table(na.omit(dems$child)))[2],
 prop.table(table(na.omit(reps$child)))[2],
 prop.table(table(na.omit(women$child)))[2],
 prop.table(table(na.omit(men$child)))[2]
 	)
-	
+
+# count proportion of judges who have 2 kids. Omit rows with missing values
+# using na.omit()
+
 prop.two <- cbind(prop.table(table(na.omit(all$child)))[3],
 prop.table(table(na.omit(dems$child)))[3],
 prop.table(table(na.omit(reps$child)))[3],
 prop.table(table(na.omit(women$child)))[3],
 prop.table(table(na.omit(men$child)))[3]
 	)
+# count proportion of judges who have 3 kids. Omit rows with missing values
+# using na.omit()
 
 prop.three <- cbind(prop.table(table(na.omit(all$child)))[4],
 prop.table(table(na.omit(dems$child)))[4],
@@ -149,12 +164,17 @@ prop.table(table(na.omit(women$child)))[4],
 prop.table(table(na.omit(men$child)))[4]
 	)
 
+# count proportion of judges who have 4 kids. Omit rows with missing values
+# using na.omit()
+
 prop.four <- cbind(prop.table(table(na.omit(all$child)))[5],
 prop.table(table(na.omit(dems$child)))[5],
 prop.table(table(na.omit(reps$child)))[5],
 prop.table(table(na.omit(women$child)))[5],
 prop.table(table(na.omit(men$child)))[5]
 	)
+# count proportion of judges who have 5 kids. Omit rows with missing values
+# using na.omit()
 
 prop.five <- cbind(prop.table(table(na.omit(all$child)))[6],
 prop.table(table(na.omit(dems$child)))[6],
@@ -162,7 +182,9 @@ prop.table(table(na.omit(reps$child)))[6],
 prop.table(table(na.omit(women$child)))[6],
 prop.table(table(na.omit(men$child)))[6]
 	)
-	
+
+# make tables for 
+
 aa <- table(na.omit(all$child))
 	plus6.all <- sum(aa[7:length(aa)])/sum(aa)
 	
