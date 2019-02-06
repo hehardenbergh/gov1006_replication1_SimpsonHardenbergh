@@ -46,7 +46,7 @@ cl   <- function(dat,fm, cluster){
 ## (Commented out; their data are available from their website)
 
 # ## Gender cases only
- women.cases <- read.csv("glynn_sen_daughters_by_case.csv", stringsAsFactors = FALSE) 
+ women.cases <- read.csv("glynn_sen_daughters_by_case_1.csv", stringsAsFactors = FALSE) 
 
 # ## Removing male plaintiffs:
  women.cases <- subset(women.cases, femplaintiff == 1)
@@ -200,6 +200,9 @@ rownames(demographic_table) <- c("Mean No. Children", "Mean No. Girls",
 	"4 children", "5 Children", "6 Children or More", "Proportion Female", "Proportion Republican",
 	"Proportion White", "Mean Year Born", "N")
 xtable(demographic_table, digits = 2, caption = "Demographics of U.S. Court of Appeal Judges who voted on gender-related cases (1996-2002)", label = "t:statsgender", align = "l|ccccc")
+
+
+
 
 ########################################################
 ## Calculating the Weights (Number of Cases)
