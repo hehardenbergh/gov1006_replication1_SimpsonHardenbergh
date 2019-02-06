@@ -25,6 +25,7 @@ library(stargazer)
 library(rms)
 library(kableExtra)
 library(knitr)
+library(tidyverse)
 ```
 
 ```{r Make Functions}
@@ -97,22 +98,38 @@ all_judges <- subset(judge.means,
 # political party. As of now, "bb" is only producing a table that shows judges
 # having up to 5 children. Additionally, we need to recode the republican
 # variable as a character so that, when the value = 1, we want it to say
-# "Republican" and when it = 0, "Democrat".
+# "Republican" and when it = 0, "Democrat". Our best attempt is the following:
+      # table_1 %>% 
+      #   select(all_judges$republican) %>% 
+      #   mutate(republican, case_when(republican == `0` ~ "Democrat",
+      #                                republican == `1` ~ "Republican"))
+# Then, ideally, you would have one unified table, where you could then use kable() and the kableExtra package to group the rows by "Number of Children" and "Number of Girls." Instead, the authors use base r to combine two separate tables into one by factors of the variable "republican", which works, but is less 'pretty' and more of a hassle. I think there is an easier way.
 
 aa <- table(all_judges$republican, all_judges$child)
+
+# something happened when they made this "bb" table: only 7 columns print instead of
+# 10.
+
 bb <- table(all_judges$republican, all_judges$girls)
+
+# row names for table
+
+rownames(aa) <- c("Democrat",
+                  "Republican")
 
 # and now for the table: use kable() instead of xtable() to sidestep the latex
 # formatting.
 
 aa %>% 
   kable(caption = "TABLE 1 Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002", 
-        digits = 1)
+        digits = 1) %>% 
+  kable_styling(full_width =F)
   # group_rows("Number of Children", 1, 3) %>% 
   # group_rows("Number of Daughters", 4, 6)
 
 bb %>% 
-  kable()
+  kable() %>% 
+  kable_styling(full_width = F)
   # group_rows("Number of Children", 1, 3) %>% 
   # group_rows("Number of Daughters", 4, 6)
 
@@ -322,7 +339,8 @@ rownames(demographic_table) <- c("Mean No. Children",
 
 kable(demographic_table, 
        digits = 2, 
-       caption = "Demographics of U.S. Court of Appeal Judges who voted on gender-related cases (1996-2002)")
+       caption = "Demographics of U.S. Court of Appeal Judges who voted on gender-related cases (1996-2002)") %>% 
+  kable_styling(full_width = F)
 ```
 
 ```{r, results="asis"}
