@@ -475,7 +475,7 @@ kable(gg,
 ```
 
 
-```{r stargazer, results='asis'}
+```{r regressions, results='asis'}
 ## Table 4: Core Results (WLS)
 
 # In this code chunk we are going to run the regression models for all the
