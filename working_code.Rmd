@@ -854,7 +854,6 @@ names(caselist) <- casenames
 ```{r, results = "asis" }
 
 ## Table 7: Dividing Up the Sample
-########################################################
 
 ## First, limiting sample space to only judges 
 ## with 1-4 kids 
@@ -975,109 +974,116 @@ colnames(aa.1) <- c("0 Girls", "1 Girl", "2 Girls", "3 Girls", "4 Girls", "5 Gir
 colnames(bb.1) <- c("0 Girls", "1 Girl", "2 Girls", "3 Girls", "4 Girls")
 
 xtable(cbind(aa.1, bb.1))
+```
 
-########################################################
-## Supplemental Information Table 1
-########################################################
+```{r, results="asis"}
+# 
+# ## Supplemental Information Table 1
+# 
+# my.out1s <- zelig(progressive.vote ~ I(girls > 0) + as.factor(child), 
+# 		model = "logit", data = subset(women.cases, child < 2))
+# summary(my.out1s)
+# 
+# 
+# my.out2s <- zelig(progressive.vote ~ I(girls > 0), 
+# 		model = "logit", data = subset(women.cases, child == 1))
+# summary(my.out2s)
+# 
+# ## and again controlling for dem or rep
+# 
+# my.out3s <- zelig(progressive.vote ~ I(girls > 0)  + republican, 
+# 		model = "logit", data = subset(women.cases, child == 1))
+# summary(my.out3s)
+# 
+# stargazer(my.out1s,
+#           my.out2s, 
+#           my.out3s, 
+#           style = "ajps", 
+#           omit.stat = c("f","ser"), 
+#           dep.var.labels = "Liberal Judge-Vote", 
+#           title = "Logit regression results, gender cases only. Outcome is whether judge in a case votes in a feminist direction. Column 1 includes judges with 0 or 1 child. Columnes 2--3 includes judges with 1 child only.")
+```
 
-my.out1s <- zelig(progressive.vote ~ I(girls > 0) + as.factor(child), 
-		model = "logit", data = subset(women.cases, child < 2))
-summary(my.out1s)
+```{r, results = "asis"}
 
-
-my.out2s <- zelig(progressive.vote ~ I(girls > 0), 
-		model = "logit", data = subset(women.cases, child == 1))
-summary(my.out2s)
-
-## and again controlling for dem or rep
-
-my.out3s <- zelig(progressive.vote ~ I(girls > 0)  + republican, 
-		model = "logit", data = subset(women.cases, child == 1))
-summary(my.out3s)
-
-stargazer(my.out1s, my.out2s, my.out3s, 
-	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Liberal Judge-Vote", title = "Logit regression results, gender cases only. Outcome is whether judge in a case votes in a feminist direction. Column 1 includes judges with 0 or 1 child. Columnes 2--3 includes judges with 1 child only.")
-
-########################################################
-## Supplemental Information Table 2
-########################################################
-
-## subsetting to rape cases, as coded by kuersten haire (includes sexual assault, per their codebook)
-rape <- subset(cases, type2 ==102 | type2 == 122 | type2 == 142) 
-crime <- subset(cases, type == 1) 
-allnongender <- subset(cases, type2 != 231 & type2 != 231 & type2 != 232 & type2 != 233 
-				  & type2 != 239 & type2 != 501 & type2 != 503)
-
-
-## Simple model for rape cases
-
-my.out1s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child), 
-		model = "logit", data = subset(rape, child < 5 & child > 0))
-summary(my.out1s)
-
-## Simple model plus a few extras for criminal cases
-
-my.out2s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child), 
-		model = "logit", data = subset(crime, child < 5 & child > 0))
-summary(my.out2s)
-
-my.out3s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child) + as.factor(circuit), 
-		model = "logit", data = subset(crime, child < 5 & child > 0))
-summary(my.out3s)
-
-my.out4s <- zelig(I(vote > 1) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), 
-		model = "logit", data = subset(crime, child < 5 & child > 0))
-summary(my.out4s)
-
-
-my.out5s <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party 
-                   + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year), 
-                   data = subset(crime, child < 5 & child > 0), model = "logit")
-my.out6s <- zelig(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), 
-                   model = "ologit", data = subset(crime, child < 5 & child > 0))
-
-
-# To bootstrap the standard errors
-mod12 <- as.formula("~ progressive.vote +vote+ girls +  child+ party +race + age + religion + gender + circuit + year + case")
-dat12 <- model.frame(mod12, data = subset(crime, child < 5 & child > 0))
-dat12$casename <- as.character(dat12$case)
-
-## create list of data.frames for each case for easy reference
-casenames <- sort(unique(dat12$casename))
-caselist <- lapply(casenames, function(x) dat12[which(dat12$casename == x),])
-names(caselist) <- casenames
-
-
-## Running the bootstraps
-## Note that not all of the coefficients will be sampled in any given of the 
-## bootstraps - this might result in some warnings form polr
-## (the ordered logit), but is not a problem for the results
-
-boots <- 1000
-b.star11 <- matrix(NA, ncol =length(my.out5s$result$coef), nrow = boots)
-colnames(b.star11) <- names(my.out5s$result$coef)
-b.star12 <- matrix(NA, ncol =length(my.out6s$result$coef), nrow = boots)
-colnames(b.star12) <- names(my.out6s$result$coef)
-set.seed(1234)
-for (b in 1:boots) {
-  if ((b%%10) == 0) cat("boot: ", b, "\n")
-  clust.sample <- sample(casenames, replace = TRUE)
-  c.boot <- do.call(rbind,lapply(clust.sample,function(x) caselist[[x]]))
-  out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + party 
-                    + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year), data = c.boot, family = binomial("logit"))
-  out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), data = c.boot)	
-  b.star11[b,names(out11.star$coef)] <- out11.star$coef
-  b.star12[b,names(out12.star$coef)] <- out12.star$coef
-}
-bcse5.crime <- apply(b.star11, 2, sd, na.rm=TRUE)		
-bcse6.crime <- apply(b.star12, 2, sd, na.rm=TRUE)		
-#save(list=c("bcse5.crime", "bcse6.crime"), file = "bootstraps-crime.RData")
-# End bootstrap code here
-load("bootstraps-crime.RData")
-
-
-stargazer(my.out1s, my.out2s, my.out3s, my.out4s, my.out5s, my.out6s,
-	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Case-Level Judge-Vote in Feminist Direction", covariate.labels = c("At Least 1 Girl","2 Children","3 Children","4 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic",
-	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1 = NULL, my.out2 = NULL, my.out3 = NULL, my.out4 = NULL, my.out5.crime = bcse5.crime, my.ou6.crime = bcse6.crime), digits = 2, title = "Logit and ordered logit regression results for a random subset of rape cases (Model 1) and criminal cases (Models 2--6), as coded by Kuersten and Haire (2012). Outcome is whether a judge in a case votes in a liberal direction (Models 1--5) or in a conservative, mixed, or liberal direction (Model 6). All models include fixed effects for the number of children. Models 3 and 4 include additional case-level controls, including circuit fixed effects (Models 3--6), year fixed effects (Models 4--6), and other predictive covariates (Models 4--6). Under no model specification is the effect on the daughter's coefficient either large or statistically significant, including when subletting by party or by gender (not shown)")
+# ## Supplemental Information Table 2
+# 
+# ## subsetting to rape cases, as coded by kuersten haire (includes sexual assault, per their codebook)
+# rape <- subset(cases, type2 ==102 | type2 == 122 | type2 == 142) 
+# crime <- subset(cases, type == 1) 
+# allnongender <- subset(cases, type2 != 231 & type2 != 231 & type2 != 232 & type2 != 233 
+# 				  & type2 != 239 & type2 != 501 & type2 != 503)
+# 
+# 
+# ## Simple model for rape cases
+# 
+# my.out1s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child), 
+# 		model = "logit", data = subset(rape, child < 5 & child > 0))
+# summary(my.out1s)
+# 
+# ## Simple model plus a few extras for criminal cases
+# 
+# my.out2s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child), 
+# 		model = "logit", data = subset(crime, child < 5 & child > 0))
+# summary(my.out2s)
+# 
+# my.out3s <- zelig(I(vote > 1) ~ I(girls > 0) + as.factor(child) + as.factor(circuit), 
+# 		model = "logit", data = subset(crime, child < 5 & child > 0))
+# summary(my.out3s)
+# 
+# my.out4s <- zelig(I(vote > 1) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), 
+# 		model = "logit", data = subset(crime, child < 5 & child > 0))
+# summary(my.out4s)
+# 
+# 
+# my.out5s <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party 
+#                    + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year), 
+#                    data = subset(crime, child < 5 & child > 0), model = "logit")
+# my.out6s <- zelig(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), 
+#                    model = "ologit", data = subset(crime, child < 5 & child > 0))
+# 
+# 
+# # To bootstrap the standard errors
+# mod12 <- as.formula("~ progressive.vote +vote+ girls +  child+ party +race + age + religion + gender + circuit + year + case")
+# dat12 <- model.frame(mod12, data = subset(crime, child < 5 & child > 0))
+# dat12$casename <- as.character(dat12$case)
+# 
+# ## create list of data.frames for each case for easy reference
+# casenames <- sort(unique(dat12$casename))
+# caselist <- lapply(casenames, function(x) dat12[which(dat12$casename == x),])
+# names(caselist) <- casenames
+# 
+# 
+# ## Running the bootstraps
+# ## Note that not all of the coefficients will be sampled in any given of the 
+# ## bootstraps - this might result in some warnings form polr
+# ## (the ordered logit), but is not a problem for the results
+# 
+# boots <- 1000
+# b.star11 <- matrix(NA, ncol =length(my.out5s$result$coef), nrow = boots)
+# colnames(b.star11) <- names(my.out5s$result$coef)
+# b.star12 <- matrix(NA, ncol =length(my.out6s$result$coef), nrow = boots)
+# colnames(b.star12) <- names(my.out6s$result$coef)
+# set.seed(1234)
+# for (b in 1:boots) {
+#   if ((b%%10) == 0) cat("boot: ", b, "\n")
+#   clust.sample <- sample(casenames, replace = TRUE)
+#   c.boot <- do.call(rbind,lapply(clust.sample,function(x) caselist[[x]]))
+#   out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + party 
+#                     + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year), data = c.boot, family = binomial("logit"))
+#   out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year), data = c.boot)	
+#   b.star11[b,names(out11.star$coef)] <- out11.star$coef
+#   b.star12[b,names(out12.star$coef)] <- out12.star$coef
+# }
+# bcse5.crime <- apply(b.star11, 2, sd, na.rm=TRUE)		
+# bcse6.crime <- apply(b.star12, 2, sd, na.rm=TRUE)		
+# #save(list=c("bcse5.crime", "bcse6.crime"), file = "bootstraps-crime.RData")
+# # End bootstrap code here
+# load("bootstraps-crime.RData")
+# 
+# 
+# stargazer(my.out1s, my.out2s, my.out3s, my.out4s, my.out5s, my.out6s,
+# 	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Case-Level Judge-Vote in Feminist Direction", covariate.labels = c("At Least 1 Girl","2 Children","3 Children","4 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic",
+# 	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1 = NULL, my.out2 = NULL, my.out3 = NULL, my.out4 = NULL, my.out5.crime = bcse5.crime, my.ou6.crime = bcse6.crime), digits = 2, title = "Logit and ordered logit regression results for a random subset of rape cases (Model 1) and criminal cases (Models 2--6), as coded by Kuersten and Haire (2012). Outcome is whether a judge in a case votes in a liberal direction (Models 1--5) or in a conservative, mixed, or liberal direction (Model 6). All models include fixed effects for the number of children. Models 3 and 4 include additional case-level controls, including circuit fixed effects (Models 3--6), year fixed effects (Models 4--6), and other predictive covariates (Models 4--6). Under no model specification is the effect on the daughter's coefficient either large or statistically significant, including when subletting by party or by gender (not shown)")
 
 ```
