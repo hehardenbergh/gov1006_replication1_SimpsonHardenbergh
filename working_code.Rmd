@@ -9,7 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## loading necessary packages
+```{Setup}
+
+# loading necessary packages
 
 library(Zelig)
 library("ZeligChoice")
@@ -18,6 +20,9 @@ library(reshape)
 library(apsrtable)
 library(stargazer)
 library(rms)
+```
+
+```{Make Functions}
 
 sim <- Zelig:::sim
 
@@ -31,41 +36,53 @@ cl   <- function(dat,fm, cluster){
            uj  <- apply(estfun(fm),2, function(x) tapply(x, cluster, sum));
            vcovCL <- dfc*sandwich(fm, meat=crossprod(uj)/N)
            coeftest(fm, vcovCL) }
-           
-           
-           
-########################################################
-## Loading the Data
-########################################################
+```
 
-## This loads three data sets
-## 1. Gender cases
-## 2. Cleaned by-judge data
-## 3. Non-gender cases, downloaded from Kuersten and Haire's website
-## (Commented out; their data are available from their website)
+```{Load Data}
 
-# ## Gender cases only
- women.cases <- read.csv("glynn_sen_daughters_by_case_1.csv", stringsAsFactors = FALSE) 
+# This loads three data sets 1. Gender cases 2. Cleaned by-judge data 3.
+# Non-gender cases, downloaded from Kuersten and Haire's website (Commented
+# out; their data are available from their website)
 
-# ## Removing male plaintiffs:
- women.cases <- subset(women.cases, femplaintiff == 1)
+# Gender cases only
+ women.cases <- read.csv("glynn_sen_daughters_by_case_1.csv", 
+                         stringsAsFactors = FALSE) 
 
- women.cases <- subset(women.cases, area == "employment" | area == "Title IX" | area == "pregnancy" | area == "abortion" | area == "reproductive rights")
+# Removing male plaintiffs:
+ women.cases <- subset(women.cases, 
+                       femplaintiff == 1)
 
- women.cases$area <- factor(women.cases$area, levels = c("abortion","employment","pregnancy","reproductive rights","Title IX"))
+ women.cases <- subset(women.cases, 
+                       area == "employment" |
+                         area == "Title IX" |
+                         area == "pregnancy" |
+                         area == "abortion" |
+                         area == "reproductive rights")
 
-# ## All cases, including non-gender cases (from Ashlyn Kuersten/Susan Haire's coding)
-# cases <- read.csv("cases.for.analysis.csv")	
+ women.cases$area <- factor(women.cases$area,
+                            levels = c("abortion",
+                                       "employment",
+                                       "pregnancy",
+                                       "reproductive rights",
+                                       "Title IX"))
 
-judge.means <- read.csv("glynn_sen_daughters_by_judge.csv", stringsAsFactors = FALSE)
+# All cases, including non-gender cases (from Ashlyn Kuersten/Susan Haire's
+# coding) cases <- read.csv("cases.for.analysis.csv")
 
-all <- subset(judge.means, girls != "NaN") # subsets judge
-								  # data to those for 
-								  # whom we have fertility data
+judge.means <- read.csv("glynn_sen_daughters_by_judge.csv", 
+                        stringsAsFactors = FALSE)
 
-######################################################
-## Table 1: Number of children and girls
-######################################################
+# Subset judge data to those for whom we have fertility data
+
+all <- subset(judge.means, 
+              girls != "NaN") 
+```
+
+```{Table 1 Number of kids and daughters}
+
+# create objects for number of children and number of girls per judge, per
+# political party
+
 aa <- table(all$republican, all$child)
 bb <- table(all$republican, all$girls)
 
@@ -73,15 +90,20 @@ bb <- table(all$republican, all$girls)
 
 xtable(aa)
 xtable(bb)
+```
 
-########################################################
-## Table 2: Judge Demographics
-########################################################
+```{Table 2 Judge Demographics}
 
-dems <- subset(all, republican == 0)
-reps <- subset(all, republican == 1)
-women <- subset(all, woman == 1)
-men <- subset(all, woman == 0)
+# Make objects for each subset of data, to create mean values of variables next.
+
+dems <- subset(all, 
+               republican == 0)
+reps <- subset(all, 
+               republican == 1)
+women <- subset(all,
+                woman == 1)
+men <- subset(all, 
+              woman == 0)
 
 
 mean.kids <-  cbind(mean(na.omit(all$child)), 
@@ -802,3 +824,4 @@ stargazer(my.out1s, my.out2s, my.out3s, my.out4s, my.out5s, my.out6s,
 	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Case-Level Judge-Vote in Feminist Direction", covariate.labels = c("At Least 1 Girl","2 Children","3 Children","4 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic",
 	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1 = NULL, my.out2 = NULL, my.out3 = NULL, my.out4 = NULL, my.out5.crime = bcse5.crime, my.ou6.crime = bcse6.crime), digits = 2, title = "Logit and ordered logit regression results for a random subset of rape cases (Model 1) and criminal cases (Models 2--6), as coded by Kuersten and Haire (2012). Outcome is whether a judge in a case votes in a liberal direction (Models 1--5) or in a conservative, mixed, or liberal direction (Model 6). All models include fixed effects for the number of children. Models 3 and 4 include additional case-level controls, including circuit fixed effects (Models 3--6), year fixed effects (Models 4--6), and other predictive covariates (Models 4--6). Under no model specification is the effect on the daughter's coefficient either large or statistically significant, including when subletting by party or by gender (not shown)")
 
+```
