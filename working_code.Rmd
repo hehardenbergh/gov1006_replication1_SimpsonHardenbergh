@@ -91,7 +91,7 @@ all_judges <- subset(judge.means,
               girls != "NaN") 
 ```
 
-```{r, results= "asis"}
+```{r, results= 'asis'}
 ## Table 1 Number of kids and daughters
 
 # create objects for number of children and number of girls per judge, per
@@ -136,7 +136,7 @@ bb %>%
 
 ```
 
-```{r, results="asis"}
+```{r, results='asis'}
 ## Table 2 Judge Demographics
 
 # Make objects for each subset of data, to create mean values of variables next.
@@ -343,7 +343,7 @@ kable(demographic_table,
   kable_styling(full_width = F)
 ```
 
-```{r, results="asis"}
+```{r, results='asis'}
 ## Calculating the Weights (Number of Cases)
 
 no_cases <- matrix(data = NA,
@@ -401,7 +401,7 @@ dem.means <- subset(judge.means,
                     republican == 0)
 ```
 
-```{r, results="asis"}
+```{r, results='asis'}
 
 ## Figure 1
 
@@ -459,7 +459,7 @@ text(x = .075,
 #dev.off()
 ```
 
-```{r, results="asis"}
+```{r, results='asis'}
 ## Table 3: Distribution of Cases
 
 gg <- rbind (summary(judge.means$no_cases),
@@ -469,11 +469,13 @@ rownames(gg) <- c("All Judges",
                   "Democrats", 
                   "Republicans")
 kable(gg, 
-       caption = "Distribution of the number of gender-related cases heard per judge, 1996-2002.")
+       caption = "Distribution of the number of gender-related cases heard per judge, 1996-2002.") %>% 
+  kable_styling(full_width = F, 
+                position = "left")
 ```
 
 
-```{r, results="asis"}
+```{r stargazer, results='asis'}
 ## Table 4: Core Results (WLS)
 
 # In this code chunk we are going to run the regression models for all the
@@ -566,7 +568,7 @@ table_4 <- stargazer(my.out1,
                                "Constant"))
 ```
 
-```{r, results = "asis"}
+```{r, results = 'asis'}
 ## Table 5: Core Results (Case-Level)
 
 my.out7 <- zelig(progressive.vote ~ as.factor(girls) + as.factor(child), 
@@ -725,7 +727,7 @@ names(caselist) <- casenames
 #           digits = 2)
 ```
 
-```{r, results = "asis" }
+```{r, results = 'asis' }
 # ## Table 6: Comparison for Non-Gender Related Cases
 # 
 # # the following was commented out: 
@@ -887,7 +889,7 @@ names(caselist) <- casenames
 # 	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1c = NULL, my.out2c = NULL, my.out3c = NULL, my.out4c = NULL, my.out5c = NULL, my.out6c = NULL, my.out7c = bcse11c, my.out3c = bcse12c), digits = 2)
 ```
 
-```{r, results = "asis" }
+```{r, results = 'asis' }
 
 ## Table 7: Dividing Up the Sample
 
@@ -977,7 +979,7 @@ stargazer(my.outREP,
           label = "t:results_party")
 ```
 
-```{r, results = "asis"}
+```{r, results = 'asis'}
 ## Table 8: Judges with 0 or 1 child
 
 ## Including people who have zero children as a control 
@@ -1012,7 +1014,7 @@ stargazer(my.out12,
 ```
 
 
-```{r, results = "asis"}
+```{r, results = 'asis'}
 ## Table 9: Distribution of gender-related cases
 
 
@@ -1052,10 +1054,11 @@ colnames(bb.1) <- c("0 Girls",
 table_9 <- cbind(aa.1, 
              bb.1)
 table_9 %>% 
-  kable(caption = "Distribution of gender-related cases")
+  kable(caption = "Distribution of gender-related cases") %>% 
+  kable_styling(full_width = F)
 ```
 
-```{r, results="asis"}
+```{r, results='asis'}
 # 
 # ## Supplemental Information Table 1
 # 
@@ -1083,7 +1086,7 @@ table_9 %>%
 #           title = "Logit regression results, gender cases only. Outcome is whether judge in a case votes in a feminist direction. Column 1 includes judges with 0 or 1 child. Columnes 2--3 includes judges with 1 child only.")
 ```
 
-```{r, results = "asis"}
+```{r, results = 'asis'}
 
 # ## Supplemental Information Table 2
 # 
