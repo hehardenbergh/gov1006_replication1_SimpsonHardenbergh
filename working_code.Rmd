@@ -5,6 +5,9 @@ date: "2/4/2019"
 output: html_document
 ---
 
+#Data Introduction
+This paper uses two datasets: data on 244 individual judges and 4,377 cases. The dataset on judges contains identification and demographic information (the judge’s name, circuit number, gender, age, year of birth, race, religion, and the party of the appointing president), information on the judge's children (the total number of children, the number of daughters, the number of sons), and the proportion of gender-related cases in which the judge votes progressively. The dataset on cases includes information on the cases themselves, the area of law they are in, the judges who decided them, and whether or not a progressive vote occurred.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
