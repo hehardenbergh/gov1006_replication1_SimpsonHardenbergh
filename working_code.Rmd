@@ -25,7 +25,12 @@ library(rms)
 
 ```{r Make Functions}
 
+# The Zelig function estimates statistical models for data frames, based on
+# which model you want to estimate with.
+
 sim <- Zelig:::sim
+
+# Not sure what this function does - yet!
 
 cl   <- function(dat,fm, cluster){
            require(sandwich, quietly = TRUE)
@@ -590,37 +595,42 @@ caselist <- lapply(casenames,
 names(caselist) <- casenames
 
 ## Running the bootstraps
-## Note that not all of the coefficients will be sampled in any given of the 
-## bootstraps - this might result in some warnings form polr
-## (the ordered logit), but is not a problem for the results
+# Note from the authors: not all of the coefficients will be sampled in any given of the 
+# bootstraps - this might result in some warnings form polr
+# (the ordered logit), but is not a problem for the results.
 
-boots <- 1000
-b.star11 <- matrix(NA, 
-                   ncol =length(my.out11$result$coef),
-                   nrow = boots)
-colnames(b.star11) <- names(my.out11$result$coef)
-b.star12 <- matrix(NA, 
-                   ncol =length(my.out12$result$coef),
-                   nrow = boots)
-colnames(b.star12) <- names(my.out12$result$coef)
-set.seed(1234)
-for (b in 1:boots) {
-	if ((b%%10) == 0) cat("boot: ", b, "\n")
-	clust.sample <- sample(casenames,
-	                       replace = TRUE)
-	c.boot <- do.call(rbind,lapply(clust.sample,
-	                               function(x) caselist[[x]]))
-	out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + republican 
-	+ age + I(religion == 4) + woman + I(race == 2) + I(race == 3) + as.factor(circuit) + as.factor(year) + as.factor(area), 
-	data = c.boot, 
-	family = binomial("logit"))
-    out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(area),
-                       data = c.boot)	
-  b.star11[b,names(out11.star$coef)] <- out11.star$coef
-	b.star12[b,names(out12.star$coef)] <- out12.star$coef
-		}
-bcse11 <- apply(b.star11, 2, sd, na.rm=TRUE)		
-bcse12 <- apply(b.star12, 2, sd, na.rm=TRUE)		
+# Here is where it gets confusing.
+
+# boots <- 1000
+# b.star11 <- matrix(NA, 
+#                    ncol =length(my.out11$result$coef),
+#                    nrow = boots)
+# colnames(b.star11) <- names(my.out11$result$coef)
+# b.star12 <- matrix(NA, 
+#                    ncol =length(my.out12$result$coef),
+#                    nrow = boots)
+# colnames(b.star12) <- names(my.out12$result$coef)
+# set.seed(1234)
+# for (b in 1:boots) {
+# 	if ((b%%10) == 0) cat("boot: ", b, "\n")
+# 	clust.sample <- sample(casenames,
+# 	                       replace = TRUE)
+# 	c.boot <- do.call(rbind,lapply(clust.sample,
+# 	                               function(x) caselist[[x]]))
+# 	out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + republican 
+# 	+ age + I(religion == 4) + woman + I(race == 2) + I(race == 3) + as.factor(circuit) + as.factor(year) + as.factor(area), 
+# 	data = c.boot, 
+# 	family = binomial("logit"))
+#     out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(area),
+#                        data = c.boot)	
+#   b.star11[b,names(out11.star$coef)] <- out11.star$coef
+# 	b.star12[b,names(out12.star$coef)] <- out12.star$coef
+# 		}
+# bcse11 <- apply(b.star11, 2, sd, na.rm=TRUE)		
+# bcse12 <- apply(b.star12, 2, sd, na.rm=TRUE)		
+
+
+
 #save(list=c("bcse11", "bcse12"), file = "bootstraps.RData")
 ## End bootstrap code here
 
@@ -629,54 +639,54 @@ bcse12 <- apply(b.star12, 2, sd, na.rm=TRUE)
 ## load("bootstraps.RData")
 
 ## Replacing the normal SEs with the bootstrap SEs for the final Table 5
-stargazer(my.out7, 
-          my.out8, 
-          my.out9, 
-          my.out10, 
-          my.out11, 
-          my.out12, 
-          style = "ajps",
-          omit.stat = c("f","ser"),
-          dep.var.labels = "Logit and ordered logit results, gender cases only. Outcome is whether judge in a case votes in a feminist direction (Columns 1--5) or in a conservative, moderate, or liberal direction (Column 6).  All models include fixed effects for total number of children and Columns 3--6 include circuit and year fixed effects. Column 5 additionally includes standard errors clustered at the case level",
-          covariate.labels = c("1 Girl","2 Girls","3 Girls","At Least 1 Girl",
-                               "2 Children",
-                               "3 Children",
-                               "4 Children",
-                               "Republican",
-                               "Age at Investiture",
-                               "Catholic",
-                               "Woman",
-                               "African American",
-                               "Hispanic", 
-                               "10th Cir", 
-                               "11th Cir",
-                               "2nd Cir",
-                               "3rd Cir",
-                               "4th Cir",
-                               "5th Cir",
-                               "6th Cir",
-                               "7th Cir",
-                               "8th Cir",
-                               "9th Cir",
-                               "DC",
-                               "1997",
-                               "1998",
-                               "1999",
-                               "2000",
-                               "2001",
-                               "2002",
-                               "Employment",
-                               "Pregnancy",
-                               "Reproduction",
-                               "Title IX",
-                               "Constant"),
-          se = list(my.out7 = NULL, 
-                    my.out8 = NULL,
-                    my.out8 = NULL, 
-                    my.out10 = NULL,
-                    my.out11 = bcse11,
-                    my.out12 = bcse12), 
-          digits = 2)
+# stargazer(my.out7, 
+#           my.out8, 
+#           my.out9, 
+#           my.out10, 
+#           my.out11, 
+#           my.out12, 
+#           style = "ajps",
+#           omit.stat = c("f","ser"),
+#           dep.var.labels = "Logit and ordered logit results, gender cases only. Outcome is whether judge in a case votes in a feminist direction (Columns 1--5) or in a conservative, moderate, or liberal direction (Column 6).  All models include fixed effects for total number of children and Columns 3--6 include circuit and year fixed effects. Column 5 additionally includes standard errors clustered at the case level",
+#           covariate.labels = c("1 Girl","2 Girls","3 Girls","At Least 1 Girl",
+#                                "2 Children",
+#                                "3 Children",
+#                                "4 Children",
+#                                "Republican",
+#                                "Age at Investiture",
+#                                "Catholic",
+#                                "Woman",
+#                                "African American",
+#                                "Hispanic", 
+#                                "10th Cir", 
+#                                "11th Cir",
+#                                "2nd Cir",
+#                                "3rd Cir",
+#                                "4th Cir",
+#                                "5th Cir",
+#                                "6th Cir",
+#                                "7th Cir",
+#                                "8th Cir",
+#                                "9th Cir",
+#                                "DC",
+#                                "1997",
+#                                "1998",
+#                                "1999",
+#                                "2000",
+#                                "2001",
+#                                "2002",
+#                                "Employment",
+#                                "Pregnancy",
+#                                "Reproduction",
+#                                "Title IX",
+#                                "Constant"),
+#           se = list(my.out7 = NULL, 
+#                     my.out8 = NULL,
+#                     my.out8 = NULL, 
+#                     my.out10 = NULL,
+#                     my.out11 = bcse11,
+#                     my.out12 = bcse12), 
+#           digits = 2)
 ```
 
 ```{r, results = "asis"}
@@ -909,11 +919,10 @@ summary(my.outREPMEN)
 
 stargazer(my.outREP, my.outDEM, my.outMEN, my.outWOMEN, my.outREPMEN,
 	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Share of Votes in Feminist Direction", digits = 2, covariate.labels = c("At Least 1 Girl", "2 Children", "3 Children", "4 Children","Constant"), title = "Weighted least squares results. Outcome is judges' proportion of feminist votes on gender-related cases. All models include fixed effects for total number of children and use weights based on the number of cases heard by each judge.", label = "t:results_party")
+```
 
-
-########################################################
+```{r, results = "asis"}
 ## Table 8: Judges with 0 or 1 child
-########################################################
 
 ## Including people who have zero children as a control 
 ## suggested by AJPS editor 
@@ -940,12 +949,11 @@ summary(my.out14)
 
 stargazer(my.out12, my.out13, my.out14, 
 	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Liberal Judge-Vote")
+```
 
 
-
-########################################################
+```{r, results = "asis"}
 ## Table 9: Distribution of gender-related cases
-########################################################
 
 
 ## just republicans:
