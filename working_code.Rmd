@@ -531,7 +531,10 @@ my.out8 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age 
 # readable format in a knitted .rmd file, as in, use kable or another package
 # that produces a nice-looking table but not in latex.
 
-table_4 <- stargazer(my.out1, 
+# in order to try to get the stargazer format to show in the knitted .rmd, place
+# "r, results='asis' into the r chunk title box."
+
+stargazer(my.out1, 
           my.out2, 
           my.out3, 
           my.out4, 
@@ -539,6 +542,8 @@ table_4 <- stargazer(my.out1,
           my.out6, 
           my.out7, 
           my.out8,
+          header = FALSE,
+          title = "TABLE4 Weighted Least Squares Results, Gender-Related Cases Only",
           style = "ajps", 
           omit.stat = c("f","ser"), 
           dep.var.labels = "Weighted least squares results, gender cases only. Outcome is proportion of feminist votes.  Models 1--4 are for all judges, while Models 5--8 are for judges with 1--4 children.  (No judge among those with 1--4 children had four girls.) All models include fixed effects for number of children and use weights based on the number of cases heard by each judge.", 
