@@ -205,7 +205,11 @@ ee <- table(na.omit(men$child))
 	
 # make a variable for judges who have 6 or more kids
 	
-prop.six.or.greater <- cbind(plus6.all, plus6.dems, plus6.reps, plus6.women, plus6.men)
+prop.six.or.greater <- cbind(plus6.all, 
+                             plus6.dems, 
+                             plus6.reps, 
+                             plus6.women, 
+                             plus6.men)
 	
 # find proportion female 
 
@@ -243,18 +247,58 @@ mean.birthyear <- cbind(mean(na.omit(all$yearb)),
 		mean(na.omit(men$yearb))
 	)
 
-no_judges <- cbind(nrow(all), nrow(dems), nrow(reps), nrow(women), nrow(men))
+# There are a total of 224 judges with fertility data. We need to combine the
+# following buckets: all judges, democrats, republicans, women, and men to make
+# a row that shows the number of judges for each column we will replicate: All,
+# Democrats, Republicans, Women, and Men. 
 
-demographic_table <- rbind(mean.kids, mean.girls, prop.zero, prop.one,
-	prop.two, prop.three, prop.four, prop.five, prop.six.or.greater, mean.female, mean.rep, mean.white, mean.yearb, no_judges)
+no_judges <- cbind(nrow(all),
+                   nrow(dems),
+                   nrow(reps),
+                   nrow(women),
+                   nrow(men))
 
-colnames(demographic_table) <- c("All", "Democrats", "Republicans","Women", "Men")
-rownames(demographic_table) <- c("Mean No. Children", "Mean No. Girls",
-	"Proportion who have 0 children","1 children",
-	"2 children", "3 children",
-	"4 children", "5 Children", "6 Children or More", "Proportion Female", "Proportion Republican",
-	"Proportion White", "Mean Year Born", "N")
-xtable(demographic_table, digits = 2, caption = "Demographics of U.S. Court of Appeal Judges who voted on gender-related cases (1996-2002)", label = "t:statsgender", align = "l|ccccc")
+demographic_table <- rbind(mean.kids, 
+                           mean.girls, 
+                           prop.zero, 
+                           prop.one,
+                           prop.two, 
+                           prop.three,
+                           prop.four, 
+                           prop.five, 
+                           prop.six.or.greater,
+                           mean.female, 
+                           mean.rep, 
+                           mean.white, 
+                           mean.yearb, 
+                           no_judges)
+
+colnames(demographic_table) <- c("All", 
+                                 "Democrats",
+                                 "Republicans",
+                                 "Women",
+                                 "Men")
+
+rownames(demographic_table) <- c("Mean No. Children",
+                                 "Mean No. Girls",
+                                 "Proportion who have 0 children",
+                                 "1 children",
+                                 "2 children", 
+                                 "3 children",
+                                 "4 children",
+                                 "5 Children",
+                                 "6 Children or More", 
+                                 "Proportion Female", 
+                                 "Proportion Republican",
+                                 "Proportion White", 
+                                 "Mean Year Born", 
+                                 "N")
+
+xtable(demographic_table, 
+       digits = 2, 
+       caption = "Demographics of U.S. Court of Appeal Judges who voted on gender-related cases (1996-2002)", 
+       label = "t:statsgender", 
+       align = "l|ccccc")
 ```
 
 ```{r Calculating the Weights (Number of Cases)}
