@@ -430,9 +430,14 @@ xtable(gg,
 
 ```{r Table 4: Core Results (WLS)}
 
-# Results for all judges
+# In this code chunk we are going to run the regression models for all the
+# judges, weighted by the number of cases they have had. It is useful to take a
+# look at the coefficients before knitting using list(model_object_name). Use
+# simple linear regression formulas for all.
 
-#judge.means <- subset(judge.means, child > 0)
+# The following was commented out in the replication code: 
+    # judge.means <- subset(judge.means, child > 0)
+# not sure why. Seems like they didn't need to subset a data frame for ave. judges with kids.
 
 my.out1 <- lm(lib_vote_share ~ as.factor(girls) + as.factor(child), 
               data = judge.means, 
@@ -441,6 +446,9 @@ my.out1 <- lm(lib_vote_share ~ as.factor(girls) + as.factor(child),
 my.out2 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child), 
               data = judge.means, 
               weights = judge.means$no_cases)
+
+# I() changes the class of an object to indicate that it should be treated ‘as
+# is’.
 
 my.out3 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3), 
               data = judge.means,
@@ -467,6 +475,11 @@ my.out7 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age 
 my.out8 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3) + as.factor(circuit.1), 
               data = subset(judge.means, child < 5 & child > 0),
               weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
+
+# Use the stargazer package to format the table. Stargazer supports presenting a
+# large number models, and looks generally nice and clean. specify the style we
+# want, ajps (American Journal of Pol. Sci.) and the table will be produced in
+# Latex and html format.
 
 stargazer(my.out1, 
           my.out2, 
