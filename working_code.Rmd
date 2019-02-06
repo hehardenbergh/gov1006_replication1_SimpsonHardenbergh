@@ -689,170 +689,170 @@ names(caselist) <- casenames
 #           digits = 2)
 ```
 
-```{r, results = "asis"}
-## Table 6: Comparison for Non-Gender Related Cases
-
-# the following was commented out: 
-    # cases <- read.csv("cases.for.analysis.csv")
+```{r, results = "asis" }
+# ## Table 6: Comparison for Non-Gender Related Cases
 # 
+# # the following was commented out: 
+# cases <- read.csv("cases.for.analysis.csv")
+# 
+# ## removing the gendered cases	
+# cases <- subset(cases, type2 != 231 & type2 != 231 & type2 != 232 & type2 != 233 
+# 				  & type2 != 239 & type2 != 501 & type2 != 503)
+# 	
+# num.vars <- colnames(cases)[sapply(cases, function(x) is.numeric(x) | is.logical(x))]
+# case.melt <- melt(cases, id = "judge_name", measure = num.vars)
+# judge.meansC <- cast(case.melt, judge_name~ variable, mean, na.rm = TRUE)
+# 
+# judge.meansC <- subset(judge.meansC, child < 5 & child > 0)
+# 
+# ## calculating the number of cases heard by these judges:
+# 
+# no_cases <- matrix(data = NA, nrow = nrow(judge.meansC), ncol = 1)
+# for(i in 1:length(no_cases)){
+# 	no_cases[i] <- nrow(cases[which(as.character(cases$judge_name) == as.character(judge.meansC$judge_name[i])),])
+# 	}
+# 
+# judge.meansC <- cbind(judge.meansC, no_cases)
+# judge.meansC$circuit[judge.meansC$judge_name == "O'Brien, Terrence"] <- 10
+# judge.meansC$circuit[judge.meansC$judge_name == "Riley, William"] <- 8
+# judge.meansC$circuit[judge.meansC$judge_name == "Gregory, Roger"] <- 4
+# judge.meansC$circuit[judge.meansC$judge_name == "King, Robert"] <- 4
+# judge.meansC$circuit[judge.meansC$judge_name == "Traxler, William"] <- 4
+# judge.meansC$circuit[judge.meansC$judge_name == "Gibbons, Julia"] <- 6
+# judge.meansC$circuit[judge.meansC$judge_name == "Melloy, Michael"] <- 8
+# judge.meansC$circuit[judge.meansC$judge_name == "Berzon, Marsha"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Bye, Kermit"] <- 8
+# judge.meansC$circuit[judge.meansC$judge_name == "Clement, Edith"] <- 5
+# judge.meansC$circuit[judge.meansC$judge_name == "Cole, Ransey"] <- 6
+# judge.meansC$circuit[judge.meansC$judge_name == "Fisher, Raymond"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Fuentes, Julio"] <- 3
+# judge.meansC$circuit[judge.meansC$judge_name == "Garland, Merrick"] <- 12
+# judge.meansC$circuit[judge.meansC$judge_name == "Gilman, Ronald"] <- 6
+# judge.meansC$circuit[judge.meansC$judge_name == "Gould, Ronald"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Graber, Susan"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Hartz, Harris"] <- 10
+# judge.meansC$circuit[judge.meansC$judge_name == "Hill, James C."] <- 5
+# judge.meansC$circuit[judge.meansC$judge_name == "Howard, Jeffrey"] <- 1
+# judge.meansC$circuit[judge.meansC$judge_name == "Hull,  Frank"] <- 11
+# judge.meansC$circuit[judge.meansC$judge_name == "Kelly, John"] <- 8
+# judge.meansC$circuit[judge.meansC$judge_name == "King, Carolyn Dineen"] <- 5
+# judge.meansC$circuit[judge.meansC$judge_name == "Lewis, Timothy K."] <- 3
+# judge.meansC$circuit[judge.meansC$judge_name == "Lipez, Kermit"] <- 1
+# judge.meansC$circuit[judge.meansC$judge_name == "Marcus, Stanley"] <- 11
+# judge.meansC$circuit[judge.meansC$judge_name == "Paez, Richard"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Parker, Fred Irving"] <- 2
+# judge.meansC$circuit[judge.meansC$judge_name == "Pooler, Rosemary"] <- 2
+# judge.meansC$circuit[judge.meansC$judge_name == "Porfilio, John"] <- 10
+# judge.meansC$circuit[judge.meansC$judge_name == "Rendell, Marjorie"] <- 3
+# judge.meansC$circuit[judge.meansC$judge_name == "Silverman, Barry"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Straub,  Chester"] <- 2
+# judge.meansC$circuit[judge.meansC$judge_name == "Thomas, Sidney"] <- 9
+# judge.meansC$circuit[judge.meansC$judge_name == "Tjoflat, Gerald B."] <- 11
+# judge.meansC$circuit[judge.meansC$judge_name == "Williams, Ann"] <- 7
+# judge.meansC$circuit[judge.meansC$judge_name == "Wilson, Charles"] <- 12
+# 
+# 
+# no_liberalvote <- matrix(data = NA, nrow = nrow(judge.meansC), ncol = 1)
+# for(i in 1:length(no_liberalvote)){
+# 	stuff <- cases[which(as.character(cases$judge_name) == as.character(judge.meansC$judge_name[i])),]
+# 	no_liberalvote[i] <- nrow(subset(stuff, vote == 2 | vote == 3))
+# 	}
+# 
+# #judge.means <- subset(judge.means, no_cases != 0)
+# 
+# lib_vote_share <- no_liberalvote/no_cases
+# 
+# judge.meansC <- cbind(judge.meansC, no_liberalvote, lib_vote_share)
+# 
+# judge.meansC <- subset(judge.meansC, girls != "NaN")
+# 
+# my.out1c <- lm(lib_vote_share ~ I(girls > 0) + as.factor(child), 
+# 	data = judge.meansC, weights = judge.meansC$no_cases)
+# summary(my.out1c)
+# 
+# my.out2c <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3), 
+# 	data = judge.meansC, weights = judge.meansC$no_cases)
+# summary(my.out2c)
+# 
+# my.out3c <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit), 
+# 	data = judge.meansC, weights = judge.meansC$no_cases)
+# summary(my.out3c)
+# 	
+# ## and then at the case level
+# 
+# cases$progressive.vote <- as.numeric(I(cases$vote > 1))
+# 
+# my.out4c <- zelig(progressive.vote ~ I(girls > 0) + as.factor(child) + as.factor(circuit), 
+# 		model = "logit", data = subset(cases, child < 5 & child > 0))
+# summary(my.out4c)
+# 
+# my.out5c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3), 
+# 		model = "logit", data = subset(cases, child < 5 & child > 0))
+# summary(my.out5c)
+# 
+# my.out6c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), 
+# 		model = "logit", data = subset(cases, child < 5 & child > 0))
+# summary(my.out6c)
+# 
+# 
+# ## Including clustered standard errors at the case level (bootstrap)
+# ## Note: Takes about 20 minutes to run
+# 
+# my.out7c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party 
+#                   + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year) 
+#                   + as.factor(type), 
+#                   data = subset(cases, child < 5 & child > 0), model = "logit")
+#                   
+# my.out8c <- zelig(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), 
+#                   model = "ologit", data = subset(cases, child < 5 & child > 0))
+# 
+# 
+#  mod12 <- as.formula("~ progressive.vote +vote+ girls +  child+ party +race + age + religion + gender + circuit + year + type + case")
+#  dat12 <- model.frame(mod12, data = subset(cases, child < 5 & child > 0))
+#  dat12$casename <- as.character(dat12$case)
+#  
+#  ## create list of data.frames for each case for easy reference
+#  casenames <- sort(unique(dat12$casename))
+#  caselist <- lapply(casenames, function(x) dat12[which(dat12$casename == x),])
+#  names(caselist) <- casenames
+#  
+# ## Running the bootstraps
+# ## Note that not all of the coefficients will be sampled in any given of the 
+# ## bootstraps - this might result in some warnings form polr
+# ## (the ordered logit), but is not a problem for the results
+# 
+# boots <- 1000
+# b.star11 <- matrix(NA, ncol =length(my.out7c$result$coef), nrow = boots)
+# colnames(b.star11) <- names(my.out7c$result$coef)
+# b.star12 <- matrix(NA, ncol =length(my.out8c$result$coef), nrow = boots)
+# colnames(b.star12) <- names(my.out8c$result$coef)
+# set.seed(1234)
+# for (b in 1:boots) {
+# 	if ((b%%10) == 0) cat("boot: ", b, "\n")
+# 	clust.sample <- sample(casenames, replace = TRUE)
+# 	c.boot <- do.call(rbind,lapply(clust.sample,function(x) caselist[[x]]))
+# 	out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + party 
+# 	+ age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year) 
+# 	+ as.factor(type), data = c.boot, family = binomial("logit"))
+#     out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), data = c.boot)	
+#   b.star11[b,names(out11.star$coef)] <- out11.star$coef
+# 	b.star12[b,names(out12.star$coef)] <- out12.star$coef
+# 		}
+# bcse11c <- apply(b.star11, 2, sd, na.rm=TRUE)		
+# bcse12c <- apply(b.star12, 2, sd, na.rm=TRUE)		
+# #save(list=c("bcse11c", "bcse12c"), file = "bootstraps-nongender.RData")
+# # End bootstrap code here
+# load("bootstraps-nongender.RData")
+# 
+# 
+# ## Table 6
+# stargazer(my.out1c, my.out2c, my.out3c, my.out4c, my.out5c, my.out6c, my.out7c, my.out8c,
+# 	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Logit and ordered logit results. Outcome is judge's overall liberal voting track record (Models 1--3), whether he or she voted in a liberal direction in an individual case (Models 4--7), or whether he or she voted in a conservative, moderate, or liberal direction in an individual case (Column 8).  All models include fixed effects for total number of children and Columns 3,4,6, and 7 include circuit fixed effects. Column 8 additionally includes standard errors clustered at the case level.", covariate.labels = c("At Least 1 Girl","2 Children","3 Children","4 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic",
+# 	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1c = NULL, my.out2c = NULL, my.out3c = NULL, my.out4c = NULL, my.out5c = NULL, my.out6c = NULL, my.out7c = bcse11c, my.out3c = bcse12c), digits = 2)
+```
 
-## removing the gendered cases	
-cases <- subset(cases, type2 != 231 & type2 != 231 & type2 != 232 & type2 != 233 
-				  & type2 != 239 & type2 != 501 & type2 != 503)
-	
-num.vars <- colnames(cases)[sapply(cases, function(x) is.numeric(x) | is.logical(x))]
-case.melt <- melt(cases, id = "judge_name", measure = num.vars)
-judge.meansC <- cast(case.melt, judge_name~ variable, mean, na.rm = TRUE)
+```{r, results = "asis" }
 
-judge.meansC <- subset(judge.meansC, child < 5 & child > 0)
-
-## calculating the number of cases heard by these judges:
-
-no_cases <- matrix(data = NA, nrow = nrow(judge.meansC), ncol = 1)
-for(i in 1:length(no_cases)){
-	no_cases[i] <- nrow(cases[which(as.character(cases$judge_name) == as.character(judge.meansC$judge_name[i])),])
-	}
-
-judge.meansC <- cbind(judge.meansC, no_cases)
-judge.meansC$circuit[judge.meansC$judge_name == "O'Brien, Terrence"] <- 10
-judge.meansC$circuit[judge.meansC$judge_name == "Riley, William"] <- 8
-judge.meansC$circuit[judge.meansC$judge_name == "Gregory, Roger"] <- 4
-judge.meansC$circuit[judge.meansC$judge_name == "King, Robert"] <- 4
-judge.meansC$circuit[judge.meansC$judge_name == "Traxler, William"] <- 4
-judge.meansC$circuit[judge.meansC$judge_name == "Gibbons, Julia"] <- 6
-judge.meansC$circuit[judge.meansC$judge_name == "Melloy, Michael"] <- 8
-judge.meansC$circuit[judge.meansC$judge_name == "Berzon, Marsha"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Bye, Kermit"] <- 8
-judge.meansC$circuit[judge.meansC$judge_name == "Clement, Edith"] <- 5
-judge.meansC$circuit[judge.meansC$judge_name == "Cole, Ransey"] <- 6
-judge.meansC$circuit[judge.meansC$judge_name == "Fisher, Raymond"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Fuentes, Julio"] <- 3
-judge.meansC$circuit[judge.meansC$judge_name == "Garland, Merrick"] <- 12
-judge.meansC$circuit[judge.meansC$judge_name == "Gilman, Ronald"] <- 6
-judge.meansC$circuit[judge.meansC$judge_name == "Gould, Ronald"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Graber, Susan"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Hartz, Harris"] <- 10
-judge.meansC$circuit[judge.meansC$judge_name == "Hill, James C."] <- 5
-judge.meansC$circuit[judge.meansC$judge_name == "Howard, Jeffrey"] <- 1
-judge.meansC$circuit[judge.meansC$judge_name == "Hull,  Frank"] <- 11
-judge.meansC$circuit[judge.meansC$judge_name == "Kelly, John"] <- 8
-judge.meansC$circuit[judge.meansC$judge_name == "King, Carolyn Dineen"] <- 5
-judge.meansC$circuit[judge.meansC$judge_name == "Lewis, Timothy K."] <- 3
-judge.meansC$circuit[judge.meansC$judge_name == "Lipez, Kermit"] <- 1
-judge.meansC$circuit[judge.meansC$judge_name == "Marcus, Stanley"] <- 11
-judge.meansC$circuit[judge.meansC$judge_name == "Paez, Richard"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Parker, Fred Irving"] <- 2
-judge.meansC$circuit[judge.meansC$judge_name == "Pooler, Rosemary"] <- 2
-judge.meansC$circuit[judge.meansC$judge_name == "Porfilio, John"] <- 10
-judge.meansC$circuit[judge.meansC$judge_name == "Rendell, Marjorie"] <- 3
-judge.meansC$circuit[judge.meansC$judge_name == "Silverman, Barry"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Straub,  Chester"] <- 2
-judge.meansC$circuit[judge.meansC$judge_name == "Thomas, Sidney"] <- 9
-judge.meansC$circuit[judge.meansC$judge_name == "Tjoflat, Gerald B."] <- 11
-judge.meansC$circuit[judge.meansC$judge_name == "Williams, Ann"] <- 7
-judge.meansC$circuit[judge.meansC$judge_name == "Wilson, Charles"] <- 12
-
-
-no_liberalvote <- matrix(data = NA, nrow = nrow(judge.meansC), ncol = 1)
-for(i in 1:length(no_liberalvote)){
-	stuff <- cases[which(as.character(cases$judge_name) == as.character(judge.meansC$judge_name[i])),]
-	no_liberalvote[i] <- nrow(subset(stuff, vote == 2 | vote == 3))
-	}
-
-#judge.means <- subset(judge.means, no_cases != 0)
-
-lib_vote_share <- no_liberalvote/no_cases
-
-judge.meansC <- cbind(judge.meansC, no_liberalvote, lib_vote_share)
-
-judge.meansC <- subset(judge.meansC, girls != "NaN")
-
-my.out1c <- lm(lib_vote_share ~ I(girls > 0) + as.factor(child), 
-	data = judge.meansC, weights = judge.meansC$no_cases)
-summary(my.out1c)
-
-my.out2c <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3), 
-	data = judge.meansC, weights = judge.meansC$no_cases)
-summary(my.out2c)
-
-my.out3c <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit), 
-	data = judge.meansC, weights = judge.meansC$no_cases)
-summary(my.out3c)
-	
-## and then at the case level
-
-cases$progressive.vote <- as.numeric(I(cases$vote > 1))
-
-my.out4c <- zelig(progressive.vote ~ I(girls > 0) + as.factor(child) + as.factor(circuit), 
-		model = "logit", data = subset(cases, child < 5 & child > 0))
-summary(my.out4c)
-
-my.out5c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3), 
-		model = "logit", data = subset(cases, child < 5 & child > 0))
-summary(my.out5c)
-
-my.out6c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), 
-		model = "logit", data = subset(cases, child < 5 & child > 0))
-summary(my.out6c)
-
-
-## Including clustered standard errors at the case level (bootstrap)
-## Note: Takes about 20 minutes to run
-
-my.out7c <- zelig(progressive.vote ~ I(girls>0) + as.factor(child) + party 
-                  + age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year) 
-                  + as.factor(type), 
-                  data = subset(cases, child < 5 & child > 0), model = "logit")
-                  
-my.out8c <- zelig(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), 
-                  model = "ologit", data = subset(cases, child < 5 & child > 0))
-
-
- mod12 <- as.formula("~ progressive.vote +vote+ girls +  child+ party +race + age + religion + gender + circuit + year + type + case")
- dat12 <- model.frame(mod12, data = subset(cases, child < 5 & child > 0))
- dat12$casename <- as.character(dat12$case)
- 
- ## create list of data.frames for each case for easy reference
- casenames <- sort(unique(dat12$casename))
- caselist <- lapply(casenames, function(x) dat12[which(dat12$casename == x),])
- names(caselist) <- casenames
- 
-## Running the bootstraps
-## Note that not all of the coefficients will be sampled in any given of the 
-## bootstraps - this might result in some warnings form polr
-## (the ordered logit), but is not a problem for the results
-
-boots <- 1000
-b.star11 <- matrix(NA, ncol =length(my.out7c$result$coef), nrow = boots)
-colnames(b.star11) <- names(my.out7c$result$coef)
-b.star12 <- matrix(NA, ncol =length(my.out8c$result$coef), nrow = boots)
-colnames(b.star12) <- names(my.out8c$result$coef)
-set.seed(1234)
-for (b in 1:boots) {
-	if ((b%%10) == 0) cat("boot: ", b, "\n")
-	clust.sample <- sample(casenames, replace = TRUE)
-	c.boot <- do.call(rbind,lapply(clust.sample,function(x) caselist[[x]]))
-	out11.star <- glm(progressive.vote ~ I(girls>0) + as.factor(child) + party 
-	+ age + I(religion == 4) + gender + I(race == 2) + I(race == 3)+ as.factor(circuit) + as.factor(year) 
-	+ as.factor(type), data = c.boot, family = binomial("logit"))
-    out12.star <- polr(as.factor(vote) ~ I(girls>0) + as.factor(child) + party + age + I(religion == 4) + gender + I(race == 2) + I(race ==3) + as.factor(circuit) + as.factor(year) + as.factor(type), data = c.boot)	
-  b.star11[b,names(out11.star$coef)] <- out11.star$coef
-	b.star12[b,names(out12.star$coef)] <- out12.star$coef
-		}
-bcse11c <- apply(b.star11, 2, sd, na.rm=TRUE)		
-bcse12c <- apply(b.star12, 2, sd, na.rm=TRUE)		
-#save(list=c("bcse11c", "bcse12c"), file = "bootstraps-nongender.RData")
-# End bootstrap code here
-load("bootstraps-nongender.RData")
-
-
-## Table 6
-stargazer(my.out1c, my.out2c, my.out3c, my.out4c, my.out5c, my.out6c, my.out7c, my.out8c,
-	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Logit and ordered logit results. Outcome is judge's overall liberal voting track record (Models 1--3), whether he or she voted in a liberal direction in an individual case (Models 4--7), or whether he or she voted in a conservative, moderate, or liberal direction in an individual case (Column 8).  All models include fixed effects for total number of children and Columns 3,4,6, and 7 include circuit fixed effects. Column 8 additionally includes standard errors clustered at the case level.", covariate.labels = c("At Least 1 Girl","2 Children","3 Children","4 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic",
-	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1c = NULL, my.out2c = NULL, my.out3c = NULL, my.out4c = NULL, my.out5c = NULL, my.out6c = NULL, my.out7c = bcse11c, my.out3c = bcse12c), digits = 2)
-
-
-########################################################
 ## Table 7: Dividing Up the Sample
 ########################################################
 
