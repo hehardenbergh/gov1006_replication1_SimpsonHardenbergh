@@ -303,7 +303,10 @@ xtable(demographic_table,
 
 ```{r Calculating the Weights (Number of Cases)}
 
-no_cases <- matrix(data = NA, nrow = nrow(judge.means), ncol = 1)
+no_cases <- matrix(data = NA,
+                   nrow = nrow(judge.means),
+                   ncol = 1)
+
 for(i in 1:length(no_cases)){
 	no_cases[i] <- nrow(women.cases[which(women.cases$name == judge.means$name[i]),])
 	}
@@ -314,112 +317,195 @@ judge.means <- cbind(judge.means, no_cases)
 
 sum(judge.means$no_cases) 	# should be 2,674 reported in the paper
 
-########################################################
-## Calculating the Outcome Var
-########################################################
 
-no_liberalvote <- matrix(data = NA, nrow = nrow(judge.means), ncol = 1)
+## Calculating the Outcome Var
+
+no_liberalvote <- matrix(data = NA,
+                         nrow = nrow(judge.means),
+                         ncol = 1)
+
 for(i in 1:length(no_liberalvote)){
 	stuff <- women.cases[which(women.cases$name == judge.means$name[i]),]
-	no_liberalvote[i] <- nrow(subset(stuff, vote == 2 | vote == 3))
-	}
+	no_liberalvote[i] <- nrow(subset(stuff,
+	                                 vote == 2 | vote == 3))}
 
 lib_vote_share <- no_liberalvote/no_cases
 
-judge.means <- cbind(judge.means, no_liberalvote, lib_vote_share)
-judge.means <- subset(judge.means, girls != "NaN")
+judge.means <- cbind(judge.means,
+                     no_liberalvote,
+                     lib_vote_share)
+judge.means <- subset(judge.means,
+                      girls != "NaN")
 
-########################################################
+
 ## Subsetting Data to Various Populations (for use later)
-########################################################
+
 
 ## just women:
-women.means <- subset(judge.means, woman == 1)
+women.means <- subset(judge.means,
+                      woman == 1)
 
 ## just men:
-men.means <- subset(judge.means, woman == 0)
+men.means <- subset(judge.means, 
+                    woman == 0)
 
 ## just republicans:
-rep.means <- subset(judge.means, republican == 1)
+rep.means <- subset(judge.means, 
+                    republican == 1)
 
 ## just democrats
-dem.means <- subset(judge.means, republican == 0)
+dem.means <- subset(judge.means, 
+                    republican == 0)
+```
 
-
-#######################################################
-## Figure 1
-########################################################
+```{r Figure 1}
 
 #pdf(file= "lib_votes.pdf", width = 5, height = 5, family = "Helvetica", pointsize = 10)
+
 plot(density(judge.means$lib_vote_share), 
-	xlim = c(-.4,1.4), ylim = c(0,2.5),
-	ylab = "", xlab = "Proportion of Cases Decided in a Feminist Direction", 
+	xlim = c(-.4,1.4), 
+	ylim = c(0,2.5),
+	ylab = "", 
+	xlab = "Proportion of Cases Decided in a Feminist Direction", 
 	yaxt = "n", 
 	bty = "n", 
 	main = "",
-	col = "black", lwd = 2)
+	col = "black", 
+	lwd = 2)
 lines(density(rep.means$lib_vote_share), 
-	col = "firebrick", lwd = 2, lty  = 2)
+	col = "firebrick", 
+	lwd = 2, 
+	lty  = 2)
 lines(density(dem.means$lib_vote_share), 
-	col = "dodgerblue", lwd = 2, lty  = 3)
-abline(v = .5, col = "grey50", lty = 2)
-text(x = .5, y = 2.4, "Less Feminist", col = "grey50", pos = 2, cex = 0.9)
-text(x = .5, y = 2.4, "More Feminist", col = "grey50", pos = 4, cex = 0.9)
-text(x = .25, y = 1.7, "Republicans", pos = 2, cex = 0.9)
-text(x = .7, y = 1, "Democrats", pos = 4, cex = 0.9)
-text(x = .075, y = .6, "All", pos = 4, cex = 0.9)
+	col = "dodgerblue",
+	lwd = 2, 
+	lty  = 3)
+abline(v = .5, 
+       col = "grey50", 
+       lty = 2)
+text(x = .5, 
+     y = 2.4, 
+     "Less Feminist",
+     col = "grey50", 
+     pos = 2, 
+     cex = 0.9)
+text(x = .5,
+     y = 2.4, 
+     "More Feminist",
+     col = "grey50",
+     pos = 4,
+     cex = 0.9)
+text(x = .25, 
+     y = 1.7, 
+     "Republicans", 
+     pos = 2, 
+     cex = 0.9)
+text(x = .7,
+     y = 1, 
+     "Democrats",
+     pos = 4,
+     cex = 0.9)
+text(x = .075,
+     y = .6,
+     "All",
+     pos = 4, 
+     cex = 0.9)
+
 #dev.off()
+```
 
-#######################################################
-## Table 3: Distribution of Cases
-########################################################
+```{r Table 3: Distribution of Cases}
 
-gg <- rbind (summary(judge.means$no_cases), summary(dem.means$no_cases), summary(rep.means$no_cases))
-rownames(gg) <- c("All Judges", "Democrats", "Republicans")
-xtable(gg, caption = "Distribution of the number of gender-related cases heard per judge, 1996-2002.", label = "t:number_cases1")
+gg <- rbind (summary(judge.means$no_cases),
+             summary(dem.means$no_cases), 
+             summary(rep.means$no_cases))
+rownames(gg) <- c("All Judges", 
+                  "Democrats", 
+                  "Republicans")
+xtable(gg, 
+       caption = "Distribution of the number of gender-related cases heard per judge, 1996-2002.", 
+       label = "t:number_cases1")
+```
 
-########################################################
-## Table 4: Core Results (WLS)
-########################################################
 
-################ Results for all judges
+```{r Table 4: Core Results (WLS)}
+
+# Results for all judges
 
 #judge.means <- subset(judge.means, child > 0)
 
 my.out1 <- lm(lib_vote_share ~ as.factor(girls) + as.factor(child), 
-	data = judge.means, weights = judge.means$no_cases)
+              data = judge.means, 
+              weights = judge.means$no_cases)
 
 my.out2 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child), 
-	data = judge.means, weights = judge.means$no_cases)
+              data = judge.means, 
+              weights = judge.means$no_cases)
 
 my.out3 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3), 
-	data = judge.means, weights = judge.means$no_cases)
+              data = judge.means,
+              weights = judge.means$no_cases)
 
 my.out4 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3) + as.factor(circuit.1), 
-	data = judge.means, weights = judge.means$no_cases)
+              data = judge.means, 
+              weights = judge.means$no_cases)
 		
-################ Results for judges between 1 and 4 children
+# Results for judges between 1 and 4 children
 	
 my.out5 <- lm(lib_vote_share ~ as.factor(girls) + as.factor(child), 
-	data = subset(judge.means, child < 5 & child > 0), weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
+              data = subset(judge.means, child < 5 & child > 0), 
+              weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
 
 my.out6 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child), 
-	data = subset(judge.means, child < 5 & child > 0), weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
+              data = subset(judge.means, child < 5 & child > 0), 
+              weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
 
 my.out7 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3), 
-	data = subset(judge.means, child < 5 & child > 0), weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
+              data = subset(judge.means, child < 5 & child > 0), 
+              weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
 
 my.out8 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age + I(religion == 4) + woman + I(race == 2) + I(race ==3) + as.factor(circuit.1), 
-	data = subset(judge.means, child < 5 & child > 0), weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
+              data = subset(judge.means, child < 5 & child > 0),
+              weights = judge.means$no_cases[which(judge.means$child > 0 & judge.means$child < 5)])
 
-stargazer(my.out1, my.out2, my.out3, my.out4, my.out5, my.out6, my.out7, my.out8,
-	style = "ajps", omit.stat = c("f","ser"), dep.var.labels = "Weighted least squares results, gender cases only. Outcome is proportion of feminist votes.  Models 1--4 are for all judges, while Models 5--8 are for judges with 1--4 children.  (No judge among those with 1--4 children had four girls.) All models include fixed effects for number of children and use weights based on the number of cases heard by each judge.", digits = 2, omit = c("circuit"), covariate.labels = c("1 Girl","2 Girls","3 Girls","4 Girls","5 Girls","At Least 1 Girl",	
-	"1 Child","2 Children","3 Children","4 Children","5 Children","6 Children","7 Children","8 Children",
-	"9 Children","Republican","Age at Investiture","Catholic","Woman","African American","Hispanic","Constant"))
+stargazer(my.out1, 
+          my.out2, 
+          my.out3, 
+          my.out4, 
+          my.out5, 
+          my.out6, 
+          my.out7, 
+          my.out8,
+          style = "ajps", 
+          omit.stat = c("f","ser"), 
+          dep.var.labels = "Weighted least squares results, gender cases only. Outcome is proportion of feminist votes.  Models 1--4 are for all judges, while Models 5--8 are for judges with 1--4 children.  (No judge among those with 1--4 children had four girls.) All models include fixed effects for number of children and use weights based on the number of cases heard by each judge.", 
+          digits = 2, 
+          omit = c("circuit"), 
+          covariate.labels = c("1 Girl",
+                               "2 Girls",
+                               "3 Girls",
+                               "4 Girls",
+                               "5 Girls",
+                               "At Least 1 Girl",
+                               "1 Child",
+                               "2 Children",
+                               "3 Children",
+                               "4 Children",
+                               "5 Children",
+                               "6 Children",
+                               "7 Children",
+                               "8 Children",
+                               "9 Children",
+                               "Republican",
+                               "Age at Investiture",
+                               "Catholic",
+                               "Woman",
+                               "African American",
+                               "Hispanic",
+                               "Constant"))
+```
 
-#######################################################
-## Table 5: Core Results (Case-Level)
-#######################################################
+```{r Table 5: Core Results (Case-Level)}
 
 my.out7 <- zelig(progressive.vote ~ as.factor(girls) + as.factor(child), 
 		model = "logit", data = subset(women.cases, child < 5 & child > 0))
