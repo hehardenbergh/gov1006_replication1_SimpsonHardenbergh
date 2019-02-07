@@ -460,6 +460,14 @@ text(x = .075,
 
 #dev.off()
 ```
+```{r}
+#class notes
+x <- as_tibble(judge.means)
+#lm.obj <- lm(lib_vote_share ~ I(girls > 0) + as.factor(child), data = x, weights = no_cases)
+#lm.obj <- lm(lib_vote_share ~ as.factor(child), data = x, weights = no_cases)
+lm.obj <- lm(lib_vote_share ~ I(girls > 0) + as.factor(circuit.1), data = x, weights = no_cases)
+summary(lm.obj)
+```
 
 ```{r, results='asis'}
 ## Table 3: Distribution of Cases
