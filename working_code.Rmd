@@ -135,7 +135,8 @@ bb %>%
   # group_rows("Number of Children", 1, 3) %>% 
   # group_rows("Number of Daughters", 4, 6)
 
-
+aa
+bb
 ```
 
 ```{r, results='asis'}
@@ -542,7 +543,7 @@ my.out8 <- lm(lib_vote_share ~ I(girls>0) + as.factor(child) + republican + age 
 # that produces a nice-looking table but not in latex.
 
 # in order to try to get the stargazer format to show in the knitted .rmd, place
-# "r, results='asis' into the r chunk title box."
+# "r, results='asis'" into the r chunk title box.
 
 stargazer(my.out1, 
           my.out2, 
@@ -570,7 +571,7 @@ stargazer(my.out1,
           #aren't excluding judges with 4 kids in other regressions just because
           #of that negative coefficient that pops up in model 1.
           column.labels = c("All Judges", "Judges with 1-4 Children"),
-          column.separate = c(4, 4)
+          column.separate = c(4, 3),
           omit = c("circuit"), 
           covariate.labels = c("1 Girl",
                                "2 Girls",
