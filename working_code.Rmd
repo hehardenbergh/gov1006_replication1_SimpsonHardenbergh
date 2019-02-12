@@ -485,7 +485,7 @@ kable(gg,
 ```
 
 
-```{r regressions, results='asis'}
+```{r regressions, results='asis', message=FALSE}
 ## Table 4: Core Results (WLS)
 
 # In this code chunk we are going to run the regression models for all the
@@ -553,11 +553,24 @@ stargazer(my.out1,
           my.out7, 
           my.out8,
           header = FALSE,
-          title = "TABLE4 Weighted Least Squares Results, Gender-Related Cases Only",
+          title = "Weighted Least Squares Results, Gender-Related Cases Only",
           style = "ajps", 
-          omit.stat = c("f","ser"), 
-          dep.var.labels = "Weighted least squares results, gender cases only. Outcome is proportion of feminist votes.  Models 1--4 are for all judges, while Models 5--8 are for judges with 1--4 children.  (No judge among those with 1--4 children had four girls.) All models include fixed effects for number of children and use weights based on the number of cases heard by each judge.", 
+          omit.stat = c("f","ser"),
+          dep.var.lables = "Voting Record in a Feminist Direction, Gender-Related Cases Only",
+          notes = "Weighted least squares results, gender cases only. Outcome is proportion of feminist votes.  Models 1--4 are for all judges, while Models 5--8 are for judges with 1--4 children.  (No judge among those with 1--4 children had four girls.) All models include fixed effects for number of children and use weights based on the number of cases heard by each judge.",  
           digits = 2, 
+          #we also want to add those nice "buckets" titles that table 4 has,
+          #creating a visual distinction between models 1-4, "All Judges" who
+          #have any number of children, and models 5-8, "Judges with 1-4
+          #Children", showing more clearly the relationship between having some
+          #kids versus...small $ judges with girls bc they have a lot of kids
+          #isnt driving the regression. exclude kids>4, but the reason they
+          #include judges with 4 kids on the right bucket (models 5-8) is to
+          #make the results more robust and to assure their readers that they
+          #aren't excluding judges with 4 kids in other regressions just because
+          #of that negative coefficient that pops up in model 1.
+          column.labels = c("All Judges", "Judges with 1-4 Children"),
+          column.separate = c(4, 4)
           omit = c("circuit"), 
           covariate.labels = c("1 Girl",
                                "2 Girls",
@@ -580,10 +593,10 @@ stargazer(my.out1,
                                "Woman",
                                "African American",
                                "Hispanic",
-                               "Constant"))
+                               "Constant")) 
 ```
 
-```{r, results = 'asis'}
+```{r, results = 'asis', message=FALSE}
 ## Table 5: Core Results (Case-Level)
 
 my.out7 <- glm(progressive.vote ~ as.factor(girls) + as.factor(child), family = binomial("logit"),
@@ -695,7 +708,7 @@ stargazer(my.out7,
           my.out9, 
           my.out10, 
           # my.out11, 
-         # my.out12, 
+          # my.out12, 
           style = "ajps",
           omit.stat = c("f","ser"),
           dep.var.labels = "Logit and ordered logit results, gender cases only. Outcome is whether judge in a case votes in a feminist direction (Columns 1--5) or in a conservative, moderate, or liberal direction (Column 6).  All models include fixed effects for total number of children and Columns 3--6 include circuit and year fixed effects. Column 5 additionally includes standard errors clustered at the case level",
