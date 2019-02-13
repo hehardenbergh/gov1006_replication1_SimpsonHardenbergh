@@ -1,0 +1,260 @@
+\documentclass[10pt,landscape]{article}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{latexsym, marvosym}
+\usepackage{pifont}
+\usepackage{lscape}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[bottom]{footmisc}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{pdfpages}
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\setlist[description]{leftmargin=0pt}
+\usepackage{xfrac}
+\usepackage[pdftex,
+            pdfauthor={Helen Simpson},
+            pdftitle={Glynn and Sen 2015 Cheatsheet},
+            ]{hyperref}
+\usepackage{relsize}
+\usepackage{rotating}
+
+ \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+    \def\independenT#1#2{\mathrel{\setbox0\hbox{$#1#2$}%
+    \copy0\kern-\wd0\mkern4mu\box0}} 
+            
+\newcommand{\noin}{\noindent}    
+\newcommand{\logit}{\textrm{logit}} 
+\newcommand{\var}{\textrm{Var}}
+\newcommand{\cov}{\textrm{Cov}} 
+\newcommand{\corr}{\textrm{Corr}} 
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Bern}{\textrm{Bern}}
+\newcommand{\Bin}{\textrm{Bin}}
+\newcommand{\Beta}{\textrm{Beta}}
+\newcommand{\Gam}{\textrm{Gamma}}
+\newcommand{\Expo}{\textrm{Expo}}
+\newcommand{\Pois}{\textrm{Pois}}
+\newcommand{\Unif}{\textrm{Unif}}
+\newcommand{\Geom}{\textrm{Geom}}
+\newcommand{\NBin}{\textrm{NBin}}
+\newcommand{\Hypergeometric}{\textrm{HGeom}}
+\newcommand{\HGeom}{\textrm{HGeom}}
+\newcommand{\Mult}{\textrm{Mult}}
+
+\geometry{top=.4in,left=.2in,right=.2in,bottom=.4in}
+
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\Large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\Large\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+\setcounter{secnumdepth}{0}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+\setenumerate[1]{label=(\alph*)}
+
+% -----------------------------------------------------------------------
+
+\usepackage{titlesec}
+
+\titleformat{\section}
+{\color{blue}\normalfont\large\bfseries}
+{\color{blue}\thesection}{1em}{}
+\titleformat{\subsection}
+{\color{cyan}\normalfont\normalsize\bfseries}
+{\color{cyan}\thesection}{1em}{}
+% Comment out the above 5 lines for black and white
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{2}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    {\color{blue} \LARGE{\textbf{Glynn and Sen 2015 Cheat Sheet}}} \\
+   % {\Large{\textbf{Probability Cheatsheet}}} \\
+    % comment out line with \color{blue} and uncomment above line for b&w
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% DESCRIPTION PARAGRAPH
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\large
+
+Do judges with daughters make more feminist decisions? What mechanism explains this effect?
+
+
+% Cheatsheet format from
+% http://www.stdout.org/$\sim$winston/latex/
+% Format used for Stat 110 exam cheat sheets
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% BEGIN CHEATSHEET
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Hypotheses}\smallskip \hrule height 2pt \medskip \normalsize
+Judges with daughters will vote in a more feminist fashion. All mechanisms would apply to both Republican and Democratic judges, but the effect will be more pronounced for Republican than Democratic judges, because the Democratic judges are already voting in a more feminist way.
+       
+\subsection{Mechanisms}
+
+\small
+ \begin{description}
+ 
+        \item \textbf{Learning}
+           \begin{enumerate}
+              
+              \item Greater effect for male judges
+              \item Liberal voting for gendered cases only
+              \item Greatest change between having no girls and having at least one girl
+         
+           \end{enumerate} 
+        
+        \item \textbf{Protectionism}
+          
+          \begin{enumerate}
+              
+              \item Both male and female judges
+              \item Liberal trend in discrimination cases, conservative trend in abortion cases?
+              \item More conservative voting in criminal cases
+         
+           \end{enumerate} 
+        
+        \item \textbf{Lobbying} (social pressure)
+          
+          \begin{enumerate}
+              
+              \item Both male and female judges
+              \item Effect across all issue areas
+              \item Increasing effect for each girl
+         
+           \end{enumerate} 
+        
+        \item \textbf{Preference realignment} (self-interest)
+        
+          \begin{enumerate}
+              
+              \item Both male and female judges
+              \item More liberal stance on civil cases in particular
+         
+           \end{enumerate} 
+        
+        \item \textbf{Fertility stopping rule:} the number of daughters depends on political preferences
+    
+           \begin{enumerate}
+              
+              \item The effect would not apply to judges with just one child.
+         
+           \end{enumerate} 
+
+   \end{description}
+    
+
+\section{Data} \smallskip \hrule height 2pt \medskip
+There are two datasets: each judge as an observation and each case as an observation (Kuersten and Haire dataset). These descriptive tables correspond to the judges dataset:
+
+   \small 
+   \begin{description}
+ 
+        \item \textbf{Table 1:} Judges' children by party and girls by party. Gives us a sense of the distribution of children/ girls.
+        
+        \item \textbf{Table 2:} Frequencies (disaggregated by demographic) of RHS variables. General interest, checking for outliers.
+        
+        \item \textbf{Table 3:} Distribution of number of cases per judge. Justifies use of weighted least squares.
+       
+        \item \textbf{Figure 1:} Smoothed histogram of LHS variable. General interest, establishes roughly normal distribution.
+        
+        \item \textbf{Table 9:} Proportion of girls conditional on number of children, disaggregated by party. Indicates that fertility stopping rules do not seem to differ across parties.
+   
+   \end{description}
+
+\section{Results} \smallskip \hrule height 2pt \medskip
+
+   \small
+   \begin{itemize}
+   
+        \item[$\square$] \text{Judges that have daughters do vote in a more feminist manner.} (Tables 4, 5, 6)
+        
+        \item[$\square$] No effect from adding additional daughters after the first daughter. (Table 4, 5, 6)
+        
+        \item[$\square$] This effect is only present in civil cases. (Tables 5, 6)
+        
+        \item[$\square$] This effect is driven primarily by men. There is a non-significant effect for women. (Table 7)
+        
+        \item[$\square$] The daughters effect holds for judges with just one child. (Table 8)
+        
+        \item[$\square$] Having girls is not correlated with having more liberal beliefs in general. (Tables 6, 9)
+   
+   \end{itemize}
+
+\section{Regressions} \smallskip \hrule height 2pt \smallskip
+
+   \small
+   \subsection{By judge}
+   \begin{description}
+         \item[Table 4] Models the proportion of feminist votes with numbers of girls as a categorical variable and child fixed effects. Then uses an indicator variable for at least 1 girl, then adds in demographic controls and circuit fixed effects. Repeats the same models for the subset of judges with 1-4 children.
+         \item[Table 6: Models 1-3] Models the proportion of liberal votes on all cases using Kuersten and Haire dataset.
+         \item[Table 7] Models the proportion of feminist votes with numbers of girls as a categorical variable and child fixed effects. Model 1 subsets the data to Republicans, Model 2 to Democrats, Model 3 to men, and Model 4 to women. It is unclear what Model 5 does.
+         \item[Table 8] Models the proportion of feminist votes for judges with zero or one (Model 1) or just one (Models 2 and 3) child. Still finds significant effects for daughters. Robustness check to reject the fertility stopping rule hypothesis.
+   \end{description}
+   
+   \subsection{By case}
+   \begin{description}
+        \item[Table 5] Models whether the judge votes in a feminist direction (logit). Model 1 treats \# of girls as categorical, Model 2 treats having at least one girl as a dummy variable, Models 3, 4, and 5 add in demographic and issue area controls. Model 6 treats the outcome as taking three possible values corresponding to how feminist the decision was.
+        \item[Table 6: Models 4-8] Models whether the judge votes in a liberal direction on all cases using Kuersten and Haire dataset.
+   
+   \end{description}
+   
+\section{Statistical Choices}\smallskip \hrule height 2pt \smallskip
+
+   \begin{center}
+   
+   \begin{tabular}{|l|p{0.5\linewidth}|} \hline
+   \textbf{Statistical Choice} & \textbf{Justification} \\\hline
+   Weighted least squares & Different judges have different numbers of cases, and therefore different SEs \\\hline
+   Categorical variable for \# of girls & Test hypothesis on the effect of additional girls \\\hline
+   Fixed effects for children & Conditioning on total number of children (They group judges with 1 child, 2 children, etc?) \\\hline
+   Subsetting data to judges with 1-4 children & Judges with more than 4 children are outliers \\\hline
+   Disaggregate data by demographic & Check that results are not being driven by one demographic group \\\hline
+   Logit/ ordered logit & Model decisions in case data as a categorical variable \\\hline
+   
+   \end{tabular}
+   \end{center}
+
+\end{multicols*}
+\end{document}
