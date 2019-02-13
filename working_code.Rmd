@@ -101,10 +101,13 @@ all_judges <- subset(judge.means,
 # having up to 5 children. Additionally, we need to recode the republican
 # variable as a character so that, when the value = 1, we want it to say
 # "Republican" and when it = 0, "Democrat". Our best attempt is the following:
-      # table_1 %>% 
-      #   select(all_judges$republican) %>% 
-      #   mutate(republican, case_when(republican == `0` ~ "Democrat",
-      #                                republican == `1` ~ "Republican"))
+#           sub_table1 <- c("republican",
+#                          "child",
+#                           "girls")
+#           table1 <- all_judges[sub_table1] %>% 
+#             mutate(republican, case_when(republican %in% 0 ~ "Democrat",
+#                                         republican %in% 1 ~ "Republican"))
+
 # Then, ideally, you would have one unified table, where you could then use kable() and the kableExtra package to group the rows by "Number of Children" and "Number of Girls." Instead, the authors use base r to combine two separate tables into one by factors of the variable "republican", which works, but is less 'pretty' and more of a hassle. I think there is an easier way.
 
 aa <- table(all_judges$republican, all_judges$child)
@@ -114,26 +117,19 @@ aa <- table(all_judges$republican, all_judges$child)
 
 bb <- table(all_judges$republican, all_judges$girls)
 
-# row names for table
-
 rownames(aa) <- c("Democrat",
                   "Republican")
 
-# and now for the table: use kable() instead of xtable() to sidestep the latex
-# formatting.
+aa %>%
+  kable(caption = "TABLE 1 Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002",
+        format = "latex") 
 
-aa %>% 
-  kable(caption = "TABLE 1 Number of Children and Girls for U.S. Courts of Appeals Judges Participating in Gender-Related Cases, 1996-2002", 
-        digits = 1) %>% 
-  kable_styling(full_width =F)
-  # group_rows("Number of Children", 1, 3) %>% 
-  # group_rows("Number of Daughters", 4, 6)
 
-bb %>% 
-  kable() %>% 
-  kable_styling(full_width = F)
-  # group_rows("Number of Children", 1, 3) %>% 
-  # group_rows("Number of Daughters", 4, 6)
+rownames(bb) <- c("Democrat",
+                  "Republican")
+
+bb %>%
+  kable(format = "latex")
 
 
 ```
@@ -233,20 +229,20 @@ prop.table(table(na.omit(men$child)))[6]
 # Sum up number of children per variable in preparation for making variables
 # that show proportion of judges with 0, 1, 2, 3, 4, 5, and 6 kids.
 
-aa <- table(na.omit(all_judges$child))
-	plus6.all <- sum(aa[7:length(aa)])/sum(aa)
+aa2 <- table(na.omit(all_judges$child))
+	plus6.all <- sum(aa2[7:length(aa2)])/sum(aa2)
 	
-bb <- table(na.omit(dems$child))
-	plus6.dems <- sum(bb[7:length(bb)])/sum(bb)
+bb2 <- table(na.omit(dems$child))
+	plus6.dems <- sum(bb2[7:length(bb2)])/sum(bb2)
 
-cc <- table(na.omit(reps$child))
-	plus6.reps <- sum(cc[7:length(cc)])/sum(cc)
+cc2 <- table(na.omit(reps$child))
+	plus6.reps <- sum(cc2[7:length(cc2)])/sum(cc2)
 
-dd <- table(na.omit(women$child))
-	plus6.women <- sum(dd[7:length(dd)])/sum(dd)
+dd2 <- table(na.omit(women$child))
+	plus6.women <- sum(dd2[7:length(dd2)])/sum(dd2)
 
-ee <- table(na.omit(men$child))
-	plus6.men <- sum(ee[7:length(ee)])/sum(ee)
+ee2 <- table(na.omit(men$child))
+	plus6.men <- sum(ee2[7:length(ee2)])/sum(ee2)
 	
 # make a variable for judges who have 6 or more kids
 	
@@ -292,11 +288,6 @@ mean.birthyear <- cbind(mean(na.omit(all_judges$yearb)),
 		mean(na.omit(men$yearb))
 	)
 
-# There are a total of 224 judges with fertility data. We need to combine the
-# following buckets: all judges, democrats, republicans, women, and men to make
-# a row that shows the number of judges for each column we will replicate: all_judges,
-# Democrats, Republicans, Women, and Men. 
-
 no_judges <- cbind(nrow(all_judges),
                    nrow(dems),
                    nrow(reps),
@@ -338,6 +329,10 @@ rownames(demographic_table) <- c("Mean No. Children",
                                  "Proportion White", 
                                  "Mean Year Born", 
                                  "N")
+# There are a total of 224 judges with fertility data. We need to combine the
+# following buckets: all judges, democrats, republicans, women, and men to make
+# a row that shows the number of judges for each column we will replicate: all_judges,
+# Democrats, Republicans, Women, and Men.
 
 kable(demographic_table, 
        digits = 2, 
@@ -460,14 +455,7 @@ text(x = .075,
 
 #dev.off()
 ```
-```{r}
-#class notes
-x <- as_tibble(judge.means)
-#lm.obj <- lm(lib_vote_share ~ I(girls > 0) + as.factor(child), data = x, weights = no_cases)
-#lm.obj <- lm(lib_vote_share ~ as.factor(child), data = x, weights = no_cases)
-lm.obj <- lm(lib_vote_share ~ I(girls > 0) + as.factor(circuit.1), data = x, weights = no_cases)
-summary(lm.obj)
-```
+
 
 ```{r, results='asis'}
 ## Table 3: Distribution of Cases
