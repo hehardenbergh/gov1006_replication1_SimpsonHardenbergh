@@ -7,6 +7,8 @@ output:
   html_document: default
 ---
 
+Excellent to have an intro
+
 # Data Introduction
 
 This paper uses two datasets: data on 244 individual judges and 4,377 cases. The dataset on judges contains identification and demographic information (the judge’s name, circuit number, gender, age, year of birth, race, religion, and the party of the appointing president), information on the judge's children (the total number of children, the number of daughters, the number of sons), and the proportion of gender-related cases in which the judge votes progressively. The dataset on cases includes information on the cases themselves, the area of law they are in, the judges who decided them, and whether or not a progressive vote occurred.
@@ -37,6 +39,7 @@ library(tidyverse)
 
 sim <- Zelig:::sim
 
+# always useful to have comments like this
 # Not sure what this function does - yet!
 
 cl   <- function(dat,fm, cluster){
@@ -96,6 +99,8 @@ all_judges <- subset(judge.means,
 ```{r, results= 'asis'}
 ## Table 1 Number of kids and daughters
 
+# very detailed comments
+
 # create objects for number of children and number of girls per judge, per
 # political party. As of now, "bb" is only producing a table that shows judges
 # having up to 5 children. Additionally, we need to recode the republican
@@ -131,6 +136,7 @@ rownames(bb) <- c("Democrat",
 bb %>%
   kable(format = "latex")
 
+# Definitely want to see some more labels on Table 1 and clean it up a bit/keep it all together
 
 ```
 
@@ -340,6 +346,8 @@ kable(demographic_table,
   kable_styling(full_width = F)
 ```
 
+nice work on table 2!
+
 ```{r, results='asis'}
 ## Calculating the Weights (Number of Cases)
 
@@ -359,6 +367,8 @@ sum(judge.means$no_cases) 	# should be 2,674 reported in the paper
 
 
 ## Calculating the Outcome Var
+
+# comments on what this is doing would be useful since this is an important outcome
 
 no_liberalvote <- matrix(data = NA,
                          nrow = nrow(judge.means),
@@ -583,6 +593,8 @@ stargazer(my.out1,
                                "Hispanic",
                                "Constant")) 
 ```
+
+Generally don't want to leave raw or unformated regression output in a document, it looks a little messy, but the final Table 4 product looks really nice!
 
 ```{r, results = 'asis', message=FALSE}
 ## Table 5: Core Results (Case-Level)
@@ -1183,3 +1195,5 @@ table_9 %>%
 # 	"2nd Cir","3rd Cir","4th Cir","5th Cir","6th Cir","7th Cir","8th Cir","9th Cir","10th Cir","11th Cir","DC","1997","1998","1999","2000","2001","2002"), se = list(my.out1 = NULL, my.out2 = NULL, my.out3 = NULL, my.out4 = NULL, my.out5.crime = bcse5.crime, my.ou6.crime = bcse6.crime), digits = 2, title = "Logit and ordered logit regression results for a random subset of rape cases (Model 1) and criminal cases (Models 2--6), as coded by Kuersten and Haire (2012). Outcome is whether a judge in a case votes in a liberal direction (Models 1--5) or in a conservative, mixed, or liberal direction (Model 6). All models include fixed effects for the number of children. Models 3 and 4 include additional case-level controls, including circuit fixed effects (Models 3--6), year fixed effects (Models 4--6), and other predictive covariates (Models 4--6). Under no model specification is the effect on the daughter's coefficient either large or statistically significant, including when subletting by party or by gender (not shown)")
  
 ```
+
+Nice job overall. In the future you'll definitely want to make sure there isn't unformatted regression output scattered throughout the document because it's pretty distracting, but this is good first replication! Your comments are very helpful and detailed.
